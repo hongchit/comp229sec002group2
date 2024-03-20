@@ -30,7 +30,7 @@ export default function Home() {
       <CardMedia
         className={classes.media}
         image={Logo500}
-        title="Unicorn Bicycle"
+        title="No Unicorn Bicycle"
       />
       <CardContent>
         <Typography variant="body2" component="p">
