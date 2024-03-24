@@ -21,7 +21,13 @@ export const LessonSchema = new Schema({
 
 const LessonModel = model("Lesson", LessonSchema);
 
+/**
+ * Helper class to facilitate Model opearations
+ */
 class Lesson extends LessonModel {
+  /**
+   * Expose Attendance Subdocument Model
+   */
   static Attendance = Attendance;
 }
 

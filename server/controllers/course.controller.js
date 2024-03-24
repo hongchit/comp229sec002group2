@@ -6,9 +6,45 @@ import errorHandler from "./../helpers/dbErrorHandler.js";
 import formidable from "formidable";
 import fs from "fs";
 
-const courseByID = (req, res) => {
-  //TODO - get course by ID
-  next();
+// Get course by ID
+const courseByID = async (req, res, next, id) => {
+  try {
+    let course = await Course.findById(id)
+      .populate("professor")
+      // Don't populate students here in attendance for better performance
+      // .populate("lessons.attendance.student")
+      .exec();
+    if (!course) {
+      return res.status(400).json({
+        error: "Course not found",
+      });
+    }
+    console.log("Course: " + course);
+    req.course = course;
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: "Could not retrieve course",
+    });
+  }
+};
+
+const read = async (req, res) => {
+  let course = req.course;
+
+  // If needed, can populate after model being constructed.
+  // Better to limit result to show only 1 lesson
+  //
+  // let course = await req.course.populate("lessons.attendance.student");
+
+  // Permission check: Check professor == current login user
+  if (req.profile.id != course.professor.id) {
+    // User is not professor. No access
+    return res.status(403).json({
+      error: "User is not authorized",
+    });
+  }
+  return res.json(req.course);
 };
 
 const lessonByID = (req, res) => {
@@ -20,8 +56,22 @@ const create = (req, res) => {
   //TODO - create course
 };
 
-const listByUser = (req, res) => {
+const listByUser = async (req, res) => {
   //TODO - list courses by user
+
+  try {
+    // Sample testing code: Current user is hardcoded as "Esther".
+    // Change to current logged-in user with the professor role
+    // let currentUser = await User.findByName("Esther");
+
+    const currentUser = req.profile;
+    let courses = await Course.list(currentUser);
+    res.json(courses);
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    });
+  }
 };
 
 const remove = (req, res) => {
@@ -78,10 +128,10 @@ const initData = async (req, res) => {
       name: "COMP006",
       professor: professorEsther,
       total_lessons: 6,
-      lessions: [
+      lessons: [
         new Course.Lesson({
           lesson_num: 6,
-          lesson_date: Date.now + 0, // Doesn't work without the calculation
+          lesson_date: Date.now + 0, // Doesn't work without the calculation. Otherwise, field is not saved in MongoDB.
           attendance: attendance,
         }),
       ],
@@ -100,6 +150,7 @@ const initData = async (req, res) => {
 export default {
   courseByID,
   lessonByID,
+  read,
   create,
   listByUser,
   remove,

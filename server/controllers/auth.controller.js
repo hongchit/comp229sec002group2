@@ -24,7 +24,7 @@ const signin = async (req, res) => {
       },
     });
   } catch (err) {
-    return res.status("401").json({ error: "Could not sign in" });
+    return res.status(401).json({ error: "Could not sign in" });
   }
 };
 const signout = (req, res) => {
@@ -42,11 +42,27 @@ const requireSignin = expressjwt({
 const hasAuthorization = (req, res, next) => {
   const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
   if (!authorized) {
-    return res.status("403").json({
+    return res.status(403).json({
       error: "User is not authorized",
     });
   }
   next();
 };
 
-export default { signin, signout, requireSignin, hasAuthorization };
+const requireProfessorRole = (req, res, next) => {
+  const isProfessor = req.profile && req.profile.isProfessor();
+  if (!isProfessor) {
+    return res.status(403).json({
+      error: "User is not authorized",
+    });
+  }
+  next();
+};
+
+export default {
+  signin,
+  signout,
+  requireSignin,
+  hasAuthorization,
+  requireProfessorRole,
+};

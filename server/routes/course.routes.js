@@ -5,14 +5,14 @@ const router = express.Router();
 
 router.param("userId", userCtrl.userByID);
 router.param("courseId", courseCtrl.courseByID);
-router.param("lessonId", courseCtrl.lesssonByID);
+router.param("lessonId", courseCtrl.lessonByID);
 
 router
   .route("/api/courses/:userId/")
   .post(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
-    userCtrl.isProfessor,
+    authCtrl.requireProfessorRole,
     courseCtrl.create
   )
   .get(
@@ -26,7 +26,7 @@ router
   .delete(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
-    userCtrl.isProfessor,
+    authCtrl.requireProfessorRole,
     courseCtrl.remove
   );
 
@@ -35,7 +35,7 @@ router
   .get(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
-    userCtrl.isProfessor,
+    authCtrl.requireProfessorRole,
     courseCtrl.stat
   );
 router
@@ -48,7 +48,7 @@ router
   .put(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
-    userCtrl.isProfessor,
+    authCtrl.requireProfessorRole,
     courseCtrl.updateAttendanceByLesson
   );
 
