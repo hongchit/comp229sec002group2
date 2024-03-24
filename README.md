@@ -21,8 +21,8 @@ git clone https://github.com/hongchit/comp229sec002group2.git
 ### Initialize MongoDB with default records
 
 1. Open browser and visit the following URLs:
-   - `http://localhost:3000/api/users/initData`
-   - `http://localhost:3000/api/courses/initData`
+   - `http://localhost:3000/api/initData/users`
+   - `http://localhost:3000/api/initData/courses`
 2. Check your MongoDB and verify the valuees.
 3. Check the file user.controller.js in the function initData() for user details being created.
 

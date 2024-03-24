@@ -15,6 +15,7 @@ export const LessonSchema = new Schema({
   lesson_date: {
     type: Date,
     index: true,
+    default: Date.now,
   },
   attendance: [AttendanceSchema],
 });
