@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.param("userId", userCtrl.userByID);
 router.param("courseId", courseCtrl.courseByID);
-router.param("lessonId", courseCtrl.lessonByID);
 
 // Read Course details
 router.route("/api/course/:courseId").get(courseCtrl.read);
@@ -14,7 +13,7 @@ router.route("/api/course/:courseId").get(courseCtrl.read);
 router.route("/api/courses/list").get(courseCtrl.listByUser);
 
 router
-  .route("/api/courses/:userId/")
+  .route("/api/courses/")
   .post(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
@@ -27,35 +26,32 @@ router
     courseCtrl.listByUser
   );
 router
-  .route("/api/courses/:userId/:courseId")
-  .get(authCtrl.requireSignin, authCtrl.hasAuthorization, courseCtrl.numLesson)
+  .route("/api/courses/:courseId")
+  .get(
+    authCtrl.requireSignin,
+    authCtrl.hasAuthorization,
+    courseCtrl.courseDetails
+  )
   .delete(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
     authCtrl.requireProfessorRole,
     courseCtrl.remove
-  );
-
-router
-  .route("/api/courses/:userId/:courseId/stat")
-  .get(
-    authCtrl.requireSignin,
-    authCtrl.hasAuthorization,
-    authCtrl.requireProfessorRole,
-    courseCtrl.stat
-  );
-router
-  .route("/api/courses/:userId/:courseId/:lessonId")
-  .get(
-    authCtrl.requireSignin,
-    authCtrl.hasAuthorization,
-    courseCtrl.attendanceByLesson
   )
   .put(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
     authCtrl.requireProfessorRole,
-    courseCtrl.updateAttendanceByLesson
+    courseCtrl.updateAttendance
+  );
+
+router
+  .route("/api/courses/:courseId/stat")
+  .get(
+    authCtrl.requireSignin,
+    authCtrl.hasAuthorization,
+    authCtrl.requireProfessorRole,
+    courseCtrl.stat
   );
 
 export default router;
