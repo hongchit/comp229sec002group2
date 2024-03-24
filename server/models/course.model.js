@@ -33,6 +33,53 @@ const CourseSchema = new Schema({
     default: Date.now,
   },
 });
+CourseSchema.methods = {
+  /**
+   * Set or update the attendance for the given Students in the attendance Map
+   * The Lesson subdocument will be created if needed. Date will be assigned
+   * the first time the attendance is taken.
+   * @param {int} lesson_num
+   * @param {Map<User, boolean>} attendance
+   */
+  updateAttendance: async function (lesson_num, attendance) {
+    let selectedLesson = undefined;
+    if (!lesson_num || !Number.isInteger(lesson_num) || lesson_num <= 0) {
+      throw "Invalid lesson_num: " + lesson_num;
+    }
+    if (!attendance instanceof Map) {
+      throw "Invalid attendance data. Encapsulated attendance in Map<User, boolean>";
+    }
+    console.log(
+      "Updating attendence on lesson " +
+        lesson_num +
+        " with " +
+        attendance.size +
+        " records."
+    );
+
+    for (let lesson of this.lessons) {
+      if (lesson && lesson.lesson_num == lesson_num) {
+        selectedLesson = lesson;
+      }
+    }
+    if (selectedLesson === undefined) {
+      selectedLesson = new Lesson({
+        lesson_num: lesson_num,
+        lesson_date: Date.now + 0,
+      });
+      this.lessons.push(selectedLesson);
+      console.log("New lesson appended: " + selectedLesson);
+    } else {
+      console.log("Found existing lessson: " + selectedLesson);
+    }
+    if (!selectedLesson.lesson_num) {
+      selectedLesson.lesson_num = lesson_num;
+    }
+    if (!selectedLesson.lesson_date) {
+      selectedLesson.lesson_date = Date.now + 0;
+    }
+  },
+};
 
 const CourseModel = model("Course", CourseSchema);
 

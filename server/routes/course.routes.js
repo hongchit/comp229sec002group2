@@ -1,6 +1,7 @@
 import express from "express";
-import courseCtrl from "../controllers/course.controller.js";
 import authCtrl from "../controllers/auth.controller.js";
+import userCtrl from "../controllers/user.controller.js";
+import courseCtrl from "../controllers/course.controller.js";
 const router = express.Router();
 
 router.param("userId", userCtrl.userByID);

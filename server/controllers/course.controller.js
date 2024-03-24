@@ -106,11 +106,12 @@ const initData = async (req, res) => {
     if (clear) {
       await Course.deleteMany();
     }
+    let students = await User.list(User.Role.STUDENT);
 
+    // Create course COMP006
     let professorEsther = await User.findByName("Esther");
     // return res.json(professorEsther);
 
-    let students = await User.list(User.Role.STUDENT);
     let attendance = [];
     students.forEach((student) => {
       let status =
@@ -137,6 +138,18 @@ const initData = async (req, res) => {
         }),
       ],
     }).save();
+
+    // Create course COMP102
+    let professorMadison = await User.findByName("Madison");
+    let courseComp102 = new Course({
+      name: "COMP102",
+      professor: professorMadison,
+      total_lessons: 2,
+    });
+    courseComp102.updateAttendance(1, new Map());
+    console.log("Updateing course: " + courseComp102);
+    await courseComp102.save();
+
     return res.status(200).json({
       message: "Courses created in database.",
     });
@@ -156,6 +169,7 @@ export default {
   listByUser,
   remove,
   numLesson,
+  stat,
   attendanceByLesson,
   updateAttendanceByLesson,
   initData,
