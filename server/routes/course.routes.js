@@ -7,6 +7,11 @@ router.param("userId", userCtrl.userByID);
 router.param("courseId", courseCtrl.courseByID);
 router.param("lessonId", courseCtrl.lessonByID);
 
+// Read Course details
+router.route("/api/course/:courseId").get(courseCtrl.read);
+// List all the Courses in brief for the professor
+router.route("/api/courses/list").get(courseCtrl.listByUser);
+
 router
   .route("/api/courses/:userId/")
   .post(

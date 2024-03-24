@@ -37,13 +37,14 @@ const read = async (req, res) => {
   //
   // let course = await req.course.populate("lessons.attendance.student");
 
-  // Permission check: Check professor == current login user
-  if (req.profile.id != course.professor.id) {
-    // User is not professor. No access
-    return res.status(403).json({
-      error: "User is not authorized",
-    });
-  }
+  // TODO - Check professor == login user, or login user is attending the course.
+  // // Permission check: Check professor == current login user
+  // if (req.profile.id != course.professor.id) {
+  //   // User is not professor. No access
+  //   return res.status(403).json({
+  //     error: "User is not authorized",
+  //   });
+  // }
   return res.json(req.course);
 };
 
