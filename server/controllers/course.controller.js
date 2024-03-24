@@ -108,46 +108,62 @@ const initData = async (req, res) => {
     }
     let students = await User.list(User.Role.STUDENT);
 
-    // Create course COMP006
     let professorEsther = await User.findByName("Esther");
-    // return res.json(professorEsther);
+    let courseCOMP006 =
+      !clear &&
+      (await Course.findByProfessorCourseName(professorEsther, "COMP006"));
+    if (!courseCOMP006) {
+      // Create course COMP006
+      // return res.json(professorEsther);
 
-    let attendance = [];
-    students.forEach((student) => {
-      let status =
-        Math.random() > 0.33
-          ? Course.Lesson.Attendance.Status.PRESENT
-          : Course.Lesson.Attendance.Status.ABSENT;
-      attendance.push(
-        new Course.Lesson.Attendance({
-          student: student,
-          attendance_status: status,
-        })
-      );
-    });
+      let attendance = [];
+      students.forEach((student) => {
+        let status =
+          Math.random() > 0.33
+            ? Course.Lesson.Attendance.Status.PRESENT
+            : Course.Lesson.Attendance.Status.ABSENT;
+        attendance.push(
+          new Course.Lesson.Attendance({
+            student: student,
+            attendance_status: status,
+          })
+        );
+      });
 
-    await new Course({
-      name: "COMP006",
-      professor: professorEsther,
-      total_lessons: 6,
-      lessons: [
-        new Course.Lesson({
-          lesson_num: 6,
-          lesson_date: Date.now + 0, // Doesn't work without the calculation. Otherwise, field is not saved in MongoDB.
-          attendance: attendance,
-        }),
-      ],
-    }).save();
+      await new Course({
+        name: "COMP006",
+        professor: professorEsther,
+        total_lessons: 6,
+        lessons: [
+          new Course.Lesson({
+            lesson_num: 6,
+            lesson_date: Date.now + 0, // Doesn't work without the calculation. Otherwise, field is not saved in MongoDB.
+            attendance: attendance,
+          }),
+        ],
+      }).save();
+    }
 
-    // Create course COMP102
     let professorMadison = await User.findByName("Madison");
-    let courseComp102 = new Course({
-      name: "COMP102",
-      professor: professorMadison,
-      total_lessons: 2,
-    });
-    courseComp102.updateAttendance(1, new Map());
-    console.log("Updateing course: " + courseComp102);
+    let courseComp102 =
+      !clear &&
+      (await Course.findByProfessorCourseName(professorMadison, "COMP102"));
+    console.log("== New course: " + courseComp102);
+
+    if (clear || !courseComp102.id) {
+      // Create course COMP102
+      courseComp102 = new Course({
+        name: "COMP102",
+        professor: professorMadison,
+        total_lessons: 0,
+      });
+      console.log("New course: " + courseComp102);
+    }
+
+    // Add one more lesson & attendence on each execution
+    courseComp102.total_lessons++;
+    courseComp102.updateAttendance(courseComp102.total_lessons, new Map());
+    console.log("Updating course: " + courseComp102);
     await courseComp102.save();
 
     return res.status(200).json({

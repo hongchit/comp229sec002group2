@@ -65,7 +65,7 @@ CourseSchema.methods = {
     if (selectedLesson === undefined) {
       selectedLesson = new Lesson({
         lesson_num: lesson_num,
-        lesson_date: Date.now + 0,
+        lesson_date: Date.now,
       });
       this.lessons.push(selectedLesson);
       console.log("New lesson appended: " + selectedLesson);
@@ -73,10 +73,12 @@ CourseSchema.methods = {
       console.log("Found existing lessson: " + selectedLesson);
     }
     if (!selectedLesson.lesson_num) {
+      console.log("*** Update lesson num again: " + lesson_num);
       selectedLesson.lesson_num = lesson_num;
     }
     if (!selectedLesson.lesson_date) {
-      selectedLesson.lesson_date = Date.now + 0;
+      console.log("*** Update lesson date again: " + Date.now);
+      selectedLesson.lesson_date = Date.now;
     }
   },
 };
@@ -109,6 +111,28 @@ class Course extends CourseModel {
       "name professor total_lessons lessons created updated"
     );
     return courses;
+  }
+
+  /**
+   * Find the course with the specified professor and course name
+   * @param {User} professor
+   * @param {string} course_name
+   * @returns Course
+   */
+  static async findByProfessorCourseName(professor, course_name) {
+    if (!professor || !professor.id) {
+      throw "Invalid professor object";
+    }
+    if (!course_name) {
+      throw "Course name is required";
+    }
+
+    let filter = {
+      professor: { $eq: professor },
+      name: { $eq: course_name },
+    };
+    let course = await Course.findOne(filter);
+    return course;
   }
 
   // static async courseWithDetails(professor, course_id) {

@@ -10,6 +10,6 @@ router.param("courseId", courseCtrl.courseByID);
 router.param("lessonId", courseCtrl.lessonByID);
 
 // router.route("/api/users/list").get(userCtrl.list);
-router.route("/api/users/initData").get(userCtrl.initData);
-router.route("/api/courses/initData").get(courseCtrl.initData);
+router.route("/api/initData/users").get(userCtrl.initData);
+router.route("/api/initData/courses").get(courseCtrl.initData);
 export default router;

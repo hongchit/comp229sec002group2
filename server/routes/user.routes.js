@@ -1,6 +1,5 @@
 import express from "express";
 import userCtrl from "../controllers/user.controller.js";
-// import authCtrl from '../controllers/auth.controller'
 import authCtrl from "../controllers/auth.controller.js";
 
 const router = express.Router();
@@ -18,7 +17,7 @@ const isProfessor = (req, res, next) => {
   next();
 };
 
-// router.route("/api/users").get(userCtrl.list);
+router.route("/api/users").get(userCtrl.list);
 // router
 //   .route("/api/users/:userId")
 //   .get(authCtrl.requireSignin, userCtrl.read)
