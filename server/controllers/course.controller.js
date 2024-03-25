@@ -79,7 +79,7 @@ const remove = (req, res) => {
   //TODO - remove course
 };
 
-const numLesson = (req, res) => {
+const courseDetails = (req, res) => {
   //TODO - get number of lessons
 };
 
@@ -87,11 +87,7 @@ const stat = (req, res) => {
   //TODO - get statistics
 };
 
-const attendanceByLesson = (req, res) => {
-  //TODO - get attendance by lesson
-};
-
-const updateAttendanceByLesson = (req, res) => {
+const updateAttendance = (req, res) => {
   //TODO - update attendance by lesson
 };
 
@@ -193,9 +189,8 @@ export default {
   create,
   listByUser,
   remove,
-  numLesson,
   stat,
-  attendanceByLesson,
-  updateAttendanceByLesson,
+  courseDetails,
+  updateAttendance,
   initData,
 };

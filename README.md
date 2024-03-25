@@ -28,6 +28,8 @@ git clone https://github.com/hongchit/comp229sec002group2.git
 
 Note: Add the parameter `clear=true` to clear existing records before adding default records. e.g. `http://localhost:3000/api/users/initData?clear=true`
 
+#NOTE - Tested by victor, need to run clear first before init user data
+
 ## Notes
 
 1. Use `yarn` instead of `npm` in this project, especially for package management.
