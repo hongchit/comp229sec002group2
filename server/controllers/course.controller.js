@@ -173,7 +173,7 @@ const stat = (req, res) => {
 const updateAttendance = async (req, res) => {
   //TODO - update attendance by lesson
   const lessonNum = req.query.lessonNum ? req.query.lessonNum : 0;
-  if (lessonNum == 0) {
+  if (lessonNum === 0) {
     return res.status(400).json({
       error: "Lesson number is required",
     });
@@ -194,37 +194,73 @@ const updateAttendance = async (req, res) => {
     });
   }
 
-  //for each attendance data, update the attendance
-  let lesson = await req.course.lessons.find(
-    (lesson) => lesson.lesson_num == lessonNum
-  );
-  if (!lesson) {
-    //create a new lesson
-    lesson = new Course.Lesson({
-      lesson_num: lessonNum,
-      lesson_date: Date.now(),
-      attendance: [],
-    });
-  }
-  let lessonAttendance = lesson.attendance;
+  //console.log(`req.course: ${req.course}`);
+  // console.log(`req.course: ${req.course.lessons}`);
 
-  attendData.forEach(async (attendance) => {
+  // //for each attendance data, update the attendance
+  // let lesson = req.course.lessons.find(
+  //   (lesson) => lesson.lesson_num === lessonNum
+  // );
+
+  // console.log(`lesson: ${lesson}`);
+
+  // if (!lesson) {
+  //   //create a new lesson
+  //   lesson = new Course.Lesson({
+  //     lesson_num: lessonNum,
+  //     lesson_date: Date.now(),
+  //     attendance: [],
+  //   });
+  // }
+  //let lessonAttendance = lesson.attendance;
+  //let attendance = new Map();
+
+  // attendData.forEach(async (attendance) => {
+  //   //find student from the database using attendance data
+  //   let student = await User.findById(attendance.student);
+  //   if (!student) {
+  //     return res.status(400).json({
+  //       error: `Student not found for attendance: ${attendance.student}`,
+  //     });
+  //   }
+
+  //   let status = attendance.status
+  //     ? Course.Lesson.Attendance.Status.PRESENT
+  //     : Course.Lesson.Attendance.Status.ABSENT;
+
+  //   attendance.set(student, status);
+  // });
+
+  let attendanceMap = new Map();
+
+  for (const attendanceData of attendData) {
     //find student from the database using attendance data
-    let student = await User.findById(attendance.student);
+    console.log(`attendanceData.status: ${attendanceData.attendance_status}`);
+    console.log(
+      `typeof attendanceData.status: ${typeof attendanceData.attendance_status}`
+    );
+    let student = await User.findById(attendanceData.student);
+    console.log(`Student: ${student}`);
     if (!student) {
       return res.status(400).json({
-        error: `Student not found for attendance: ${attendance.student}`,
+        error: `Student not found for attendance: ${attendanceData.student}`,
       });
     }
 
-    let status = attendance.status
+    let status = attendanceData.attendance_status
       ? Course.Lesson.Attendance.Status.PRESENT
       : Course.Lesson.Attendance.Status.ABSENT;
 
-    lessonAttendance.set(student, status);
-  });
+    // Update the attendance status
+    attendanceMap.set(student, status);
+  }
 
-  req.course.updateAttendance(lessonNum, lessonAttendance);
+  console.log(`finished attendanceMap: ${attendanceMap}`);
+  console.log(Array.from(attendanceMap));
+
+  req.course.updateAttendance(Number(lessonNum), attendanceMap);
+  console.log(`updated atendance:`);
+  console.log(`req.course: ${req.course}`);
   await req.course.save();
   res.json(req.course);
 };
