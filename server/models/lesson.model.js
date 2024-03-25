@@ -21,40 +21,49 @@ export const LessonSchema = new Schema({
 });
 LessonSchema.methods = {
   updateAttendance: function (student, status) {
-    // console.log(
-    //   "Lesson: " +
-    //     this +
-    //     "\n" +
-    //     typeof student +
-    //     " student: " +
-    //     student +
-    //     ", status: " +
-    //     status
-    // );
     if (!student.id || !typeof student == "User" || !student.isStudent()) {
       throw "Attendance key must be a student of type User model";
     }
 
+    let pushNeeded = false;
     let record = undefined;
+    let index = undefined;
     if (this.attendance) {
-      for (let item of this.attendance) {
-        if (item.student.id == student.id) {
-          record = item;
+      for (let i = 0; i < this.attendance.size; i++) {
+        if (this.attendance[i].id == student.id) {
+          index = i;
           break;
         }
       }
-    } else {
-      this.attendance = [];
     }
-    if (!record) {
-      record = new Attendance({
+    if (index === undefined || !this.attendance[index]) {
+      let newRecord = new Attendance({
         student: student,
-        status: status,
+        attendance_status: status,
       });
-      this.attendance.push(record);
+      index = this.attendance.size;
+      pushNeeded = true;
+      // console.log("record newrecord: " + newRecord);
+      record = newRecord;
+      // console.log("record new: " + record);
     } else {
-      record.status = status;
+      record = this.attendance[index];
+      record.attendance_status = status;
+      // console.log("record existing: " + record);
     }
+    if (pushNeeded) {
+      this.attendance.push(record);
+    }
+
+    // if (!record) {
+    //   record = new Attendance({
+    //     student: student,
+    //     status: status,
+    //   });
+    //   this.attendance.push(record);
+    // } else {
+    //   record.status = status;
+    // }
   },
 };
 

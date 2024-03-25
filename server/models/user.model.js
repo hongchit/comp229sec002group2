@@ -107,47 +107,42 @@ UserSchema.methods = {
   },
 };
 
-const UserModel = model("User", UserSchema);
+const User = model("User", UserSchema);
 /**
- * Helper class to facilitate Model opearations
+ * Expose User Role
  */
-class User extends UserModel {
-  /**
-   * Expose Role enum
-   */
-  static Role = Role;
+User.Role = Role;
 
-  /**
-   * List users
-   * @param {string} role Limit result to the specified role. Leave empty to list all users.
-   * @returns Users
-   */
-  static async list(role) {
-    let filter = undefined;
-    if (role) {
-      if (Role.isValid(role)) {
-        filter = { user_role: { $eq: role } };
-      } else {
-        throw "Unknown user role: " + role;
-      }
+/**
+ * List users
+ * @param {string} role Limit result to the specified role. Leave empty to list all users.
+ * @returns Users
+ */
+User.list = async function (role) {
+  let filter = undefined;
+  if (role) {
+    if (Role.isValid(role)) {
+      filter = { user_role: { $eq: role } };
+    } else {
+      throw "Unknown user role: " + role;
     }
-
-    let users = await User.find(filter).select(
-      "name email user_role updated created"
-    );
-    return users;
   }
 
-  /**
-   * Find a user by user name
-   * @param {string} name
-   * @returns User
-   */
-  static async findByName(name) {
-    let filter = { name: { $eq: name } };
-    let user = await User.findOne(filter);
-    return user;
-  }
-}
+  let users = await User.find(filter).select(
+    "name email user_role updated created"
+  );
+  return users;
+};
+
+/**
+ * Find a user by user name
+ * @param {string} name
+ * @returns User
+ */
+User.findByName = async function (name) {
+  let filter = { name: { $eq: name } };
+  let user = await User.findOne(filter);
+  return user;
+};
 
 export default User;

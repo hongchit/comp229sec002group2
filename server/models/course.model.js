@@ -65,13 +65,15 @@ CourseSchema.methods = {
         }
       }
     }
+    let pushNeeded = false;
     let lessonSelected = undefined;
     if (index === undefined || !this.lessons[index]) {
       let lesson = new Lesson({
         lesson_num: lesson_num,
       });
       index = this.lessons.size;
-      this.lessons.addToSet(lesson);
+      pushNeeded = true;
+      // this.lessons.addToSet(lesson);
       lessonSelected = lesson;
     } else {
       lessonSelected = this.lessons[index];
@@ -86,6 +88,11 @@ CourseSchema.methods = {
     attendance.forEach((value, key) => {
       lessonSelected.updateAttendance(key, value);
     });
+
+    if (pushNeeded) {
+      this.lessons.push(lessonSelected);
+    }
+    console.log(this);
   },
 };
 
