@@ -119,7 +119,7 @@ const initData = async (req, res) => {
       let attendance = [];
       students.forEach((student) => {
         let status =
-          Math.random() > 0.33
+          Math.random() > 0.45
             ? Course.Lesson.Attendance.Status.PRESENT
             : Course.Lesson.Attendance.Status.ABSENT;
         attendance.push(
@@ -156,14 +156,23 @@ const initData = async (req, res) => {
         name: "COMP102",
         professor: professorMadison,
         total_lessons: 0,
+        // lessons: [],
       });
-      console.log("New course: " + courseComp102);
+      // console.log("New course: " + courseComp102);
     }
 
     // Add one more lesson & attendence on each execution
     courseComp102.total_lessons++;
-    courseComp102.updateAttendance(courseComp102.total_lessons, new Map());
-    console.log("Updating course: " + courseComp102);
+    let attendence = new Map();
+    students.forEach((student) => {
+      let status =
+        Math.random() > 0.45
+          ? Course.Lesson.Attendance.Status.PRESENT
+          : Course.Lesson.Attendance.Status.ABSENT;
+      attendence.set(student, status);
+    });
+    courseComp102.updateAttendance(courseComp102.total_lessons, attendence);
+    // console.log("Updating course: " + courseComp102);
     await courseComp102.save();
 
     return res.status(200).json({
