@@ -9,6 +9,7 @@ import fs from "fs";
 import jwt from "jsonwebtoken";
 
 import config from "./../../config/config.js";
+//import { max } from "lodash";
 // const jwt = require("jsonwebtoken");
 
 // Get course by ID
@@ -169,8 +170,63 @@ const stat = (req, res) => {
   //TODO - get statistics
 };
 
-const updateAttendance = (req, res) => {
+const updateAttendance = async (req, res) => {
   //TODO - update attendance by lesson
+  const lessonNum = req.query.lessonNum ? req.query.lessonNum : 0;
+  if (lessonNum == 0) {
+    return res.status(400).json({
+      error: "Lesson number is required",
+    });
+  }
+
+  const maxLesson = req.course.total_lessons;
+
+  if (lessonNum > maxLesson) {
+    return res.status(400).json({
+      error: `Lesson number ${lessonNum} is greater than total lessons ${maxLesson}`,
+    });
+  }
+
+  const attendData = req.body.attendance;
+  if (!attendData) {
+    return res.status(400).json({
+      error: "Attendance data is required",
+    });
+  }
+
+  //for each attendance data, update the attendance
+  let lesson = await req.course.lessons.find(
+    (lesson) => lesson.lesson_num == lessonNum
+  );
+  if (!lesson) {
+    //create a new lesson
+    lesson = new Course.Lesson({
+      lesson_num: lessonNum,
+      lesson_date: Date.now(),
+      attendance: [],
+    });
+  }
+  let lessonAttendance = lesson.attendance;
+
+  attendData.forEach(async (attendance) => {
+    //find student from the database using attendance data
+    let student = await User.findById(attendance.student);
+    if (!student) {
+      return res.status(400).json({
+        error: `Student not found for attendance: ${attendance.student}`,
+      });
+    }
+
+    let status = attendance.status
+      ? Course.Lesson.Attendance.Status.PRESENT
+      : Course.Lesson.Attendance.Status.ABSENT;
+
+    lessonAttendance.set(student, status);
+  });
+
+  req.course.updateAttendance(lessonNum, lessonAttendance);
+  await req.course.save();
+  res.json(req.course);
 };
 
 // Populate database with default data
