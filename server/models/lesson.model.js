@@ -19,17 +19,50 @@ export const LessonSchema = new Schema({
   },
   attendance: [AttendanceSchema],
 });
+LessonSchema.methods = {
+  updateAttendance: function (student, status) {
+    // console.log(
+    //   "Lesson: " +
+    //     this +
+    //     "\n" +
+    //     typeof student +
+    //     " student: " +
+    //     student +
+    //     ", status: " +
+    //     status
+    // );
+    if (!student.id || !typeof student == "User" || !student.isStudent()) {
+      throw "Attendance key must be a student of type User model";
+    }
 
-const LessonModel = model("Lesson", LessonSchema);
+    let record = undefined;
+    if (this.attendance) {
+      for (let item of this.attendance) {
+        if (item.student.id == student.id) {
+          record = item;
+          break;
+        }
+      }
+    } else {
+      this.attendance = [];
+    }
+    if (!record) {
+      record = new Attendance({
+        student: student,
+        status: status,
+      });
+      this.attendance.push(record);
+    } else {
+      record.status = status;
+    }
+  },
+};
+
+const Lesson = model("Lesson", LessonSchema);
 
 /**
- * Helper class to facilitate Model opearations
+ * Expose Attendance Subdocument Model
  */
-class Lesson extends LessonModel {
-  /**
-   * Expose Attendance Subdocument Model
-   */
-  static Attendance = Attendance;
-}
+Lesson.Attendance = Attendance;
 
 export default Lesson;

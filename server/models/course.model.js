@@ -42,7 +42,6 @@ CourseSchema.methods = {
    * @param {Map<User, boolean>} attendance
    */
   updateAttendance: async function (lesson_num, attendance) {
-    let selectedLesson = undefined;
     if (!lesson_num || !Number.isInteger(lesson_num) || lesson_num <= 0) {
       throw "Invalid lesson_num: " + lesson_num;
     }
@@ -57,96 +56,98 @@ CourseSchema.methods = {
         " records."
     );
 
-    for (let lesson of this.lessons) {
-      if (lesson && lesson.lesson_num == lesson_num) {
-        selectedLesson = lesson;
+    let index = undefined;
+    if (this.lessons) {
+      for (let i = 0; i < this.lessons.length; i++) {
+        if (this.lessons[i] && this.lessons[i].lesson_num == lesson_num) {
+          index = i;
+          break;
+        }
       }
     }
-    if (selectedLesson === undefined) {
-      selectedLesson = new Lesson({
+    let lessonSelected = undefined;
+    if (index === undefined || !this.lessons[index]) {
+      let lesson = new Lesson({
         lesson_num: lesson_num,
-        lesson_date: Date.now,
       });
-      this.lessons.push(selectedLesson);
-      console.log("New lesson appended: " + selectedLesson);
+      index = this.lessons.size;
+      this.lessons.addToSet(lesson);
+      lessonSelected = lesson;
     } else {
-      console.log("Found existing lessson: " + selectedLesson);
+      lessonSelected = this.lessons[index];
     }
-    if (!selectedLesson.lesson_num) {
-      console.log("*** Update lesson num again: " + lesson_num);
-      selectedLesson.lesson_num = lesson_num;
+    if (!lessonSelected.lesson_num) {
+      lessonSelected.lesson_num = lesson_num;
     }
-    if (!selectedLesson.lesson_date) {
-      console.log("*** Update lesson date again: " + Date.now);
-      selectedLesson.lesson_date = Date.now;
+    if (!lessonSelected.lesson_date) {
+      lessonSelected.lesson_date = Date.now;
     }
+
+    attendance.forEach((value, key) => {
+      lessonSelected.updateAttendance(key, value);
+    });
   },
 };
 
-const CourseModel = model("Course", CourseSchema);
+const Course = model("Course", CourseSchema);
 
 /**
- * Helper class to facilitate Model opearations
+ * List courses
+ * @param {User} professor Limit result to the specified professor. Leave empty to list all courses.
  */
-class Course extends CourseModel {
-  /**
-   * Expose Lesson Subdocument Model
-   */
-  static Lesson = Lesson;
-
-  /**
-   * List courses
-   * @param {User} professor Limit result to the specified professor. Leave empty to list all courses.
-   */
-  static async list(professor) {
-    let filter = undefined;
-    if (professor) {
-      if (!professor.id) {
-        throw "Invalid professor object";
-      }
-      filter = { professor: { $eq: professor } };
-    }
-
-    let courses = await Course.find(filter).select(
-      "name professor total_lessons lessons created updated"
-    );
-    return courses;
-  }
-
-  /**
-   * Find the course with the specified professor and course name
-   * @param {User} professor
-   * @param {string} course_name
-   * @returns Course
-   */
-  static async findByProfessorCourseName(professor, course_name) {
-    if (!professor || !professor.id) {
+Course.list = async function (professor) {
+  let filter = undefined;
+  if (professor) {
+    if (!professor.id) {
       throw "Invalid professor object";
     }
-    if (!course_name) {
-      throw "Course name is required";
-    }
-
-    let filter = {
-      professor: { $eq: professor },
-      name: { $eq: course_name },
-    };
-    let course = await Course.findOne(filter);
-    return course;
+    filter = { professor: { $eq: professor } };
   }
 
-  // static async courseWithDetails(professor, course_id) {
-  //   let course = await Lesson.findById(course_id);
+  let courses = await Course.find(filter).select(
+    "name professor total_lessons lessons created updated"
+  );
+  return courses;
+};
 
-  //   let course = await Course.findById(id).populate("professor").exec();
-  //   if (!course) {
-  //     return res.status("400").json({
-  //       error: "Course not found",
-  //     });
-  //   }
+/**
+ * Find the course with the specified professor and course name
+ * @param {User} professor
+ * @param {string} course_name
+ * @returns Course
+ */
+Course.findByProfessorCourseName = async function (professor, course_name) {
+  if (!professor || !professor.id) {
+    throw "Invalid professor object";
+  }
+  if (!course_name) {
+    throw "Course name is required";
+  }
 
-  //   return course;
-  // }
-}
+  let filter = {
+    professor: { $eq: professor },
+    name: { $eq: course_name },
+  };
+  let course = await Course.findOne(filter);
+  return course;
+};
+
+/**
+ * Expose Lesson Subdocument Model
+ */
+Course.Lesson = Lesson;
 
 export default Course;
+
+// static async courseWithDetails(professor, course_id) {
+//   let course = await Lesson.findById(course_id);
+
+//   let course = await Course.findById(id).populate("professor").exec();
+//   if (!course) {
+//     return res.status("400").json({
+//       error: "Course not found",
+//     });
+//   }
+
+//   return course;
+// }

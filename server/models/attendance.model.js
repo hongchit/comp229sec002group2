@@ -5,11 +5,6 @@
 
 import { Schema, model } from "mongoose";
 
-class Status {
-  static PRESENT = true;
-  static ABSENT = false;
-}
-
 export const AttendanceSchema = new Schema({
   student: {
     type: Schema.Types.ObjectId,
@@ -21,16 +16,14 @@ export const AttendanceSchema = new Schema({
   },
 });
 
-const AttendanceModel = model("Attendance", AttendanceSchema);
+const Attendance = model("Attendance", AttendanceSchema);
 
 /**
- * Helper class to facilitate Model operations
+ * Expose Status enum
  */
-class Attendance extends AttendanceModel {
-  /**
-   * Expose Status enum
-   */
-  static Status = Status;
-}
+Attendance.Status = class Status {
+  static PRESENT = true;
+  static ABSENT = false;
+};
 
 export default Attendance;
