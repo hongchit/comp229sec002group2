@@ -134,12 +134,35 @@ const listByUser = async (req, res) => {
   }
 };
 
-const remove = (req, res) => {
+const remove = async (req, res) => {
   //TODO - remove course
+  try {
+    let course = req.course;
+    let deletedCourse = await course.deleteOne();
+    res.json(deletedCourse);
+  } catch (err) {
+    return res.status(400).json({
+      error: `Remove course failed - ${errorHandler.getErrorMessage(err)}`,
+    });
+  }
 };
 
 const courseDetails = (req, res) => {
   //TODO - get number of lessons
+  const lessonNum = req.query.lessonNum ? req.query.lessonNum : 0;
+  if (lessonNum > 0) {
+    // Get attendance for the lesson
+    let lesson = req.course.lessons.find(
+      (lesson) => lesson.lesson_num == lessonNum
+    );
+    if (!lesson) {
+      return res.status(400).json({
+        error: "Lesson not found",
+      });
+    }
+    return res.json(lesson);
+  }
+  return res.json(req.course);
 };
 
 const stat = (req, res) => {
