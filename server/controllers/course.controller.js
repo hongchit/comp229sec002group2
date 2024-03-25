@@ -6,6 +6,11 @@ import errorHandler from "./../helpers/dbErrorHandler.js";
 import formidable from "formidable";
 import fs from "fs";
 
+import jwt from "jsonwebtoken";
+
+import config from "./../../config/config.js";
+// const jwt = require("jsonwebtoken");
+
 // Get course by ID
 const courseByID = async (req, res, next, id) => {
   try {
@@ -53,8 +58,44 @@ const lessonByID = (req, res) => {
   next();
 };
 
-const create = (req, res) => {
+const create = async (req, res) => {
   //TODO - create course
+
+  try {
+    // let course = await Course.findById(id)
+    //   .populate("professor")
+    //   // Don't populate students here in attendance for better performance
+    //   // .populate("lessons.attendance.student")
+    //   .exec();
+    // if (!course) {
+    //   return res.status(400).json({
+    //     error: "Course not found",
+    //   });
+    // }
+    // console.log("Course: " + course);
+    // req.course = course;
+    // next();
+    const currentUser = req.profile; //new User(req.profile);
+    console.log(`Current user: ${currentUser}`);
+    let currentProfessor = await User.findById(currentUser.id);
+    console.log(`Current professor: ${currentProfessor}`);
+
+    console.log(`name: ${req.body.name}`);
+    console.log(`total_lessons: ${req.body.total_lessons}`);
+    console.log(`professor: ${currentUser}`);
+
+    let newCourse = await new Course({
+      name: req.body.name, //"COMP006",
+      professor: currentProfessor,
+      total_lessons: req.body.total_lessons,
+      lessons: [],
+    }).save();
+    res.json(newCourse);
+  } catch (err) {
+    return res.status(400).json({
+      error: `Could not create course: ${err.message}`,
+    });
+  }
 };
 
 const listByUser = async (req, res) => {
@@ -63,24 +104,65 @@ const listByUser = async (req, res) => {
   try {
     // Sample testing code: Current user is hardcoded as "Esther".
     // Change to current logged-in user with the professor role
-    // let currentUser = await User.findByName("Esther");
+
+    //let currentUser = await User.findByName("Esther");
+
+    // // Get the token from the request cookies
+    // console.log(`start listByUser`);
+    // const token = req.cookies.t;
+
+    // console.log(`Token: ${token}`);
+    // // Verify and decode the token
+    // const decoded = jwt.verify(token, config.jwtSecret);
+    // console.log(`Decoded: ${decoded}`);
+    // // Now, decoded._id contains the user's ID
+    // const userId = decoded._id;
+    // console.log(`User ID: ${userId}`);
+
+    // // Use findById to get the user's information from the database
+    // const currentUser = await User.findById(userId);
 
     const currentUser = req.profile;
-    let courses = await Course.list(currentUser);
+    console.log(`Current user: ${currentUser}`);
+    let courses = await Course.list(currentUser); //.populate("professor").exec();
+    // .populate("student");
     res.json(courses);
   } catch (err) {
     return res.status(400).json({
-      error: errorHandler.getErrorMessage(err),
+      error: `${errorHandler.getErrorMessage(err)}`,
     });
   }
 };
 
-const remove = (req, res) => {
+const remove = async (req, res) => {
   //TODO - remove course
+  try {
+    let course = req.course;
+    let deletedCourse = await course.deleteOne();
+    res.json(deletedCourse);
+  } catch (err) {
+    return res.status(400).json({
+      error: `Remove course failed - ${errorHandler.getErrorMessage(err)}`,
+    });
+  }
 };
 
 const courseDetails = (req, res) => {
   //TODO - get number of lessons
+  const lessonNum = req.query.lessonNum ? req.query.lessonNum : 0;
+  if (lessonNum > 0) {
+    // Get attendance for the lesson
+    let lesson = req.course.lessons.find(
+      (lesson) => lesson.lesson_num == lessonNum
+    );
+    if (!lesson) {
+      return res.status(400).json({
+        error: "Lesson not found",
+      });
+    }
+    return res.json(lesson);
+  }
+  return res.json(req.course);
 };
 
 const stat = (req, res) => {

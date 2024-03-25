@@ -13,7 +13,7 @@ router.route("/api/course/:courseId").get(courseCtrl.read);
 router.route("/api/courses/list").get(courseCtrl.listByUser);
 
 router
-  .route("/api/courses/")
+  .route("/api/user/:userId/courses/")
   .post(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
@@ -25,8 +25,9 @@ router
     authCtrl.hasAuthorization,
     courseCtrl.listByUser
   );
+
 router
-  .route("/api/courses/:courseId")
+  .route("/api/user/:userId/courses/:courseId")
   .get(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
@@ -46,7 +47,7 @@ router
   );
 
 router
-  .route("/api/courses/:courseId/stat")
+  .route("/api/user/:userId/courses/:courseId/stat")
   .get(
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
