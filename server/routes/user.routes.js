@@ -5,17 +5,17 @@ import authCtrl from "../controllers/auth.controller.js";
 const router = express.Router();
 router.route("/api/users").post(userCtrl.create);
 
-const isProfessor = (req, res, next) => {
-  //TODO - check if user is a professor
+// const isProfessor = (req, res, next) => {
+//   //TODO - check if user is a professor
 
-  // const isSeller = req.profile && req.profile.seller;
-  // if (!isSeller) {
-  //   return res.status("403").json({
-  //     error: "User is not a seller",
-  //   });
-  // }
-  next();
-};
+//   // const isSeller = req.profile && req.profile.seller;
+//   // if (!isSeller) {
+//   //   return res.status("403").json({
+//   //     error: "User is not a seller",
+//   //   });
+//   // }
+//   next();
+// };
 
 router.route("/api/users").get(userCtrl.list);
 // router

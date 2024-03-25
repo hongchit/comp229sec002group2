@@ -53,7 +53,7 @@ const requireProfessorRole = (req, res, next) => {
   const isProfessor = req.profile && req.profile.isProfessor();
   if (!isProfessor) {
     return res.status(403).json({
-      error: "User is not authorized",
+      error: "User is not a professor, not authorized",
     });
   }
   next();
