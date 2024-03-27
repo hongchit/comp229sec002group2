@@ -55,3 +55,14 @@ Note: Add the parameter `clear=true` to clear existing records before adding def
 
 - Assume a user can be either teacher or student. Cannot be both
 - All students will attend each course
+
+# Sample Users
+
+| Role      | Name    | Email                 | Password |
+| --------- | ------- | --------------------- | -------- |
+| Professor | Esther  | esther@professor.com  | esther   |
+| Professor | Madison | madison@professor.com | madison  |
+| Professor | Tahlia  | tahlia@professor.com  | tahlia   |
+| Student   | Gloria  | gloria@student.com    | gloria   |
+| Student   | Wilson  | wilson@student.com    | wilson   |
+| Student   | Cynthia | cynthia@student.com   | cynthia  |
