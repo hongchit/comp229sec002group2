@@ -30,11 +30,11 @@ export default function Home() {
       <CardMedia
         className={classes.media}
         image={Logo500}
-        title="Unicorn Bicycle"
+        title="No Unicorn Bicycle"
       />
       <CardContent>
         <Typography variant="body2" component="p">
-          Welcome to the MERN Skeleton home page.
+          Welcome to the Student Attendance Management System.
         </Typography>
       </CardContent>
     </Card>
