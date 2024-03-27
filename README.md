@@ -13,6 +13,8 @@ MERN Skeleton with our logo.
 git clone https://github.com/hongchit/comp229sec002group2.git
 ```
 
+stephanie santos 03242024
+
 3. Copy the file `client/.env.template` as `client/.env`
 4. Edit the new file `client/.env`, and update the MONGODB_URI connection string
 5. Execute `yarn install` in the project root folder and the `client` folder
