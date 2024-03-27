@@ -45,7 +45,7 @@ Note: Add the parameter `clear=true` to clear existing records before adding def
 
 1. Use `dotenv` for environment variable (Vite config has to be fixed and not supported yet)
 2. Added `.vscode` for VSCode settings (extensions, auto-formatting on file save, etc)
-3. Logo file
+3. Logo file name.
 
 ---
 
