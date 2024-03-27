@@ -31,3 +31,7 @@ git clone https://github.com/hongchit/comp229sec002group2.git
 1. Use `dotenv` for environment variable (Vite config has to be fixed and not supported yet)
 2. Added `.vscode` for VSCode settings (extensions, auto-formatting on file save, etc)
 3. Logo file
+
+## Changes from Week 10
+
+1. Updated Project2
