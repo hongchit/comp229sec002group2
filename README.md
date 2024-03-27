@@ -13,6 +13,8 @@ MERN Skeleton with our logo.
 git clone https://github.com/hongchit/comp229sec002group2.git
 ```
 
+stephanie santos 03242024
+
 3. Copy the file `client/.env.template` as `client/.env`
 4. Edit the new file `client/.env`, and update the MONGODB_URI connection string
 5. Execute `yarn install` in the project root folder and the `client` folder
@@ -43,7 +45,7 @@ Note: Add the parameter `clear=true` to clear existing records before adding def
 
 1. Use `dotenv` for environment variable (Vite config has to be fixed and not supported yet)
 2. Added `.vscode` for VSCode settings (extensions, auto-formatting on file save, etc)
-3. Logo file
+3. Logo file name.
 
 ---
 
