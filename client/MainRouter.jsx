@@ -7,13 +7,13 @@ import Signin from "./lib/Signin.jsx";
 import Profile from "./user/Profile.jsx";
 import PrivateRoute from "./lib/PrivateRoute.jsx";
 import EditProfile from "./user/EditProfile.jsx";
+import CourseSelected from "./course/CourseSelected.jsx";
 
 import Menu from "./core/Menu";
 function MainRouter() {
   return (
     <div>
       <Menu />
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/users" element={<Users />} />
@@ -28,6 +28,7 @@ function MainRouter() {
           }
         />
         <Route path="/user/:userId" element={<Profile />} />
+        <Route path="/course/:courseId" element={<CourseSelected />} />
       </Routes>
     </div>
   );
