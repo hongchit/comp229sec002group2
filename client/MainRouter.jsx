@@ -10,6 +10,7 @@ import EditProfile from "./user/EditProfile.jsx";
 import Courses from "./course/Courses.jsx";
 import CourseSelected from "./course/CourseSelected.jsx";
 import Menu from "./core/Menu";
+import NewCourse from "./course/NewCourse.jsx";
 
 function MainRouter() {
   return (
@@ -30,6 +31,7 @@ function MainRouter() {
         />
         <Route path="/user/:userId" element={<Profile />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/New" element={<NewCourse />} />
         <Route path="/course/:courseId" element={<CourseSelected />} />
       </Routes>
     </div>
