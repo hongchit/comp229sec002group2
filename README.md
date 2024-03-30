@@ -68,3 +68,7 @@ Note: Add the parameter `clear=true` to clear existing records before adding def
 | Student   | Gloria  | gloria@student.com    | gloria   |
 | Student   | Wilson  | wilson@student.com    | wilson   |
 | Student   | Cynthia | cynthia@student.com   | cynthia  |
+
+## Changes from Week 10
+
+1. Updated Project2
