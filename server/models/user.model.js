@@ -34,11 +34,27 @@ const UserSchema = new Schema({
     match: [/.+\@.+\..+/, "Please fill a valid email address"],
     required: "Email is required",
   },
+  lastName: {  // New lastname field
+    type: String,
+    trim: true,
+    required: 'Last name is required'
+  },
+  phone: {  // New phone field
+    type: String,
+    trim: true,
+    required: 'Phone number is required'
+  },
   hashed_password: {
     type: String,
     required: "Password is required",
   },
   salt: String,
+
+  confirmPassword: {  // New confirmPassword field
+    type: String,
+    required: 'Confirm password is required'
+  },
+  
   user_role: {
     type: String,
     default: "student",

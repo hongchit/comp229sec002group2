@@ -4,7 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import Logo500 from "./../assets/images/InsideOut-Logo500.jpg";
+import Logo500 from "./../assets/images/logo.png";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <Card className={classes.card}>
       <Typography variant="h6" className={classes.title}>
-        Home Page
+        Winter 2024
       </Typography>
       <CardMedia
         className={classes.media}

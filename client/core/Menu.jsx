@@ -63,11 +63,6 @@ export default function Menu() {
           </span>
         )}
 
-
-{/* <Link to="/signup">
-              <Button style={isActive(location, "/signup")}>Sign up</Button>
-            </Link>
-            <Link to="/signin"></Link> */}
         <Link to="/courses">
           <Button style={isActive(location, "/course")}>Course Name</Button>
         </Link>
