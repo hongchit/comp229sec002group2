@@ -8,8 +8,9 @@ import {
   Toolbar,
   Box,
 } from "@material-ui/core/";
+import { Link } from "react-router-dom";
 
-function LessonSidebar({ numLessons }) {
+function LessonSidebar({ numLessons, courseId }) {
   // Create an array of lessons based on numLessons
   const lessons = Array.from(
     { length: Number(numLessons) },
@@ -20,7 +21,12 @@ function LessonSidebar({ numLessons }) {
     <Box component="nav" sx={{ width: 150, flexShrink: { md: 0 } }}>
       <List>
         {lessons.map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem
+            button
+            key={text}
+            component={Link}
+            to={`/course/${courseId}?numLesson=${index + 1}`}
+          >
             <ListItemText primary={text} />
           </ListItem>
         ))}
