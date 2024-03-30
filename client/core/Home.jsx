@@ -30,11 +30,11 @@ export default function Home() {
       <CardMedia
         className={classes.media}
         image={Logo500}
-        title="No Unicorn Bicycle"
+        title="Inside Out Logo"
       />
       <CardContent>
         <Typography variant="body2" component="p">
-          Welcome to the Student Attendance Management System.
+        Welcome to the Student Attendance Management System.
         </Typography>
       </CardContent>
     </Card>
