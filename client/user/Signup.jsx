@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 import { create } from "./api-user";
 const useStyles = makeStyles((theme) => ({
   card: {
-    maxWidth: 400,
+    maxWidth: 600,
     margin: "0 auto",
     marginTop: theme.spacing(3),
     padding: theme.spacing(2),
@@ -48,6 +48,10 @@ export default function Signup() {
     name: "",
     password: "",
     email: "",
+    lastName: '',
+    phone: '',
+    confirmPassword: '',
+
   });
   const [open, setOpen] = useState(false);
   const handleChange = (name) => (event) => {
@@ -61,6 +65,9 @@ export default function Signup() {
       name: values.name || undefined,
       email: values.email || undefined,
       password: values.password || undefined,
+      lastName: values.lastName || undefined,
+      phone: values.phone || undefined,
+      confirmPassword: values.confirmPassword || undefined,
     };
     create(user).then((data) => {
       if (data.error) {
@@ -82,31 +89,64 @@ export default function Signup() {
             Sign Up
           </Typography>
 
-          <TextField
-            id="name"
-            label="Name"
-            className={classes.textField}
-            value={values.name}
-            onChange={handleChange("name")}
-            margin="normal"
-          />
-          <TextField
-            id="email"
-            label="Email"
-            className={classes.textField}
-            value={values.email}
-            onChange={handleChange("email")}
-            margin="normal"
-          />
-          <TextField
-            id="password"
-            label="Password"
-            className={classes.textField}
-            value={values.password}
-            onChange={handleChange("password")}
-            type="password"
-            margin="normal"
-          />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <TextField
+              id="name"
+              label="First Name"
+              className={classes.textField}
+              value={values.name}
+              onChange={handleChange('name')}
+              margin="normal"
+            />
+            <TextField
+              id="lastName"
+              label="Last Name"
+              className={classes.textField}
+              value={values.designation}
+              onChange={handleChange('lastName')}
+              margin="normal"
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <TextField
+              id="email"
+              label="Email"
+              className={classes.textField}
+              value={values.email}
+              onChange={handleChange('email')}
+              margin="normal"
+            />
+            <TextField
+              id="phone"
+              label="Phone"
+              className={classes.textField}
+              value={values.phone}
+              onChange={handleChange('phone')}
+              margin="normal"
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <TextField
+              id="password"
+              label="Password"
+              className={classes.textField}
+              value={values.password}
+              onChange={handleChange('password')}
+              type="password"
+              margin="normal"
+            />
+            <TextField
+              id="confirmPassword"
+              label="Confirm Password"
+              className={classes.textField}
+              value={values.confirmPassword}
+              onChange={handleChange('confirmPassword')}
+              type="password"
+              margin="normal"
+            />
+          </div>
         </CardContent>
         <CardActions>
           <Button
