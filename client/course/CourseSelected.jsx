@@ -80,11 +80,11 @@ export default function CourseSelected() {
     };
   }, []);
 
-  let numLessons = courseData ? courseData.total_lessons : 0;
+  let totalLessons = courseData ? courseData.total_lessons : 0;
 
   return (
     <div style={{ display: "flex" }}>
-      <LessonSidebar numLessons={numLessons} />
+      <LessonSidebar numLessons={totalLessons} />
       <div style={{ flexGrow: 1, marginLeft: "0px" }}>
         <h2>Course Selected: {courseData && courseData.name}</h2>
         <h3>Professor: {courseData && courseData.professor.name}</h3>
