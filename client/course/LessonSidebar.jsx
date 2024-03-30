@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Drawer,
   List,
@@ -27,7 +28,9 @@ function LessonSidebar({ numLessons }) {
     </Box>
   );
 }
-
+LessonSidebar.propTypes = {
+  numLessons: PropTypes.number.isRequired,
+};
 export default LessonSidebar;
 /*
     <Drawer variant="permanent" anchor="left">

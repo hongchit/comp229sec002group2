@@ -74,7 +74,7 @@ export default function Signin(props) {
 
   const { from } = location.state || {
     from: {
-      pathname:  "/courses",
+      pathname: "/courses",
     },
   };
   const { redirectToReferrer } = values;
@@ -112,10 +112,6 @@ export default function Signin(props) {
           onChange={handleChange("password")}
           margin="normal"
         />
-
-        <Typography variant="body2" className={classes.forgotPassword}>
-          Forgot Password?
-        </Typography>
 
         <br />{" "}
         {values.error && (

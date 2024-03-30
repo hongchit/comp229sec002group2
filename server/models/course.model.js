@@ -46,7 +46,7 @@ CourseSchema.methods = {
       throw "Invalid lesson_num: " + lesson_num;
     }
     if (!attendance instanceof Map) {
-      throw "Invalid attendance data. Encapsulated attendance in Map<User, boolean>";
+      throw "Invalid attendance data. Encapsulate attendance in Map<User, boolean>";
     }
     console.log(
       "Updating attendence on lesson " +
