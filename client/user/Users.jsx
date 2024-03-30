@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     // Define your root styles here
   },
 }));
+
 export default function Users() {
   const [users, setUsers] = useState([]);
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function Users() {
       <List dense>
         {users.map((item, i) => {
           return (
-            <Link component={RouterLink} to={"/user/" + item._id} key={i}>
+            <Link component={RouterLink} to={"/user/" + item._id} key={i} >
               <ListItem button>
                 <ListItemAvatar>
                   <Avatar></Avatar>

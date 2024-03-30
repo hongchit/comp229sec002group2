@@ -30,7 +30,7 @@ const read = async (params, credentials, signal) => {
       method: "GET",
       signal: signal,
       headers: {
-        Accept: "application/json",
+        Accept: "application/json", 
         "Content-Type": "application/json",
         Authorization: "Bearer " + credentials.t,
       },
