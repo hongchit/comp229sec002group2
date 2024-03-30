@@ -1,28 +1,37 @@
 "use strict";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
 import auth from "../lib/auth-helper.js";
 import { list } from "../lib/api-course.js";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import IconButton from "@material-ui/core/IconButton";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
+// import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-//import ArrowForward from '@material-ui/core/ArrowForward'
-import ArrowForward from "@material-ui/icons/ArrowForward";
 const useStyles = makeStyles((theme) => ({
+  gridList: {
+    width: "90%",
+    marginLeft: "auto !important",
+    marginRight: "auto !important",
+  },
   card: {
     // Define your card styles here
+    width: "80%",
+    height: "80%",
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft: 50,
+    marginRight: 50,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
+  cardcontent: {},
   textField: {
     // Define your text field styles here
   },
@@ -37,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     // Define your root styles here
+    // display: "flex",
+    // flexDirection: "column",
+    // flexWrap: "wrap",
+    // justifyContent: "space-around",
   },
 }));
 export default function Courses() {
@@ -62,26 +75,28 @@ export default function Courses() {
 
   const classes = useStyles();
   return (
-    <Paper className={classes.root} elevation={4}>
+    <Paper className={classes.root} elevation={0}>
       <Typography variant="h6" className={classes.title}>
         My Courses
       </Typography>
-      <List dense>
+
+      <GridList cellHeight={160} className={classes.gridList} cols={4}>
         {courses.map((item, i) => {
           return (
-            <Link component={RouterLink} to={"/course/" + item._id} key={i}>
-              <ListItem button>
-                <ListItemText primary={item.name} />
-                <ListItemSecondaryAction>
-                  <IconButton>
-                    <ArrowForward />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </Link>
+            <GridListTile key={item.i}>
+              <Link component={RouterLink} to={"/course/" + item._id} key={i}>
+                <Card className={classes.card} elevation={4}>
+                  <CardContent className={classes.cardcontent}>
+                    <Typography variant="h5" component="h2">
+                      {item.name}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Link>
+            </GridListTile>
           );
         })}
-      </List>
+      </GridList>
     </Paper>
   );
 }
