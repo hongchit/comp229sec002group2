@@ -51,9 +51,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CourseSelected() {
-  const paras = useParams();
+  const { courseId } = useParams();
   const classes = useStyles();
   const jwt = auth.isAuthenticated();
+  const [redirectToSignin, setRedirectToSignin] = useState(false);
   const [courseData, setCourseData] = useState();
 
   useEffect(() => {
@@ -62,13 +63,14 @@ export default function CourseSelected() {
 
     getCourse(
       {
-        courseId: paras.courseId,
+        courseId: courseId,
         userId: jwt.user._id,
       },
       { t: jwt.token },
       signal
     ).then((data) => {
       if (data && data.error) {
+        setRedirectToSignin(true);
         console.log(data.error);
       } else {
         console.log(data);
@@ -78,7 +80,16 @@ export default function CourseSelected() {
     return function cleanup() {
       abortController.abort();
     };
-  }, []);
+  }, [courseId, jwt.token, jwt.user._id]);
+
+  if (redirectToSignin) {
+    return (
+      <Navigate to="/signin" state={{ from: location.pathname }} replace />
+    );
+  }
+  if (auth.isAuthenticated()) {
+    console.log(auth.isAuthenticated().user._id);
+  }
 
   let numLessons = courseData ? courseData.total_lessons : 0;
 
