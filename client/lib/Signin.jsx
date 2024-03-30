@@ -11,6 +11,7 @@ import auth from "./auth-helper.js";
 import { Navigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { signin } from "./api-auth.js";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -73,7 +74,7 @@ export default function Signin(props) {
 
   const { from } = location.state || {
     from: {
-      pathname: "/",
+      pathname:  "/courses",
     },
   };
   const { redirectToReferrer } = values;
@@ -85,12 +86,17 @@ export default function Signin(props) {
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h6" className={classes.title}>
-          Sign In
+          Welcome!
         </Typography>
+
+        <Typography variant="body2">
+          Do not have an account? <Link to="/signup">Sign up</Link>
+        </Typography>
+
         <TextField
           id="email"
           type="email"
-          label="Email"
+          label="Email Address"
           className={classes.textField}
           value={values.email}
           onChange={handleChange("email")}
@@ -106,6 +112,11 @@ export default function Signin(props) {
           onChange={handleChange("password")}
           margin="normal"
         />
+
+        <Typography variant="body2" className={classes.forgotPassword}>
+          Forgot Password?
+        </Typography>
+
         <br />{" "}
         {values.error && (
           <Typography component="p" color="error">
@@ -123,7 +134,7 @@ export default function Signin(props) {
           onClick={clickSubmit}
           className={classes.submit}
         >
-          Submit
+          LOGIN
         </Button>
       </CardActions>
     </Card>
