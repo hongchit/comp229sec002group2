@@ -79,6 +79,33 @@ const getAttendanceList = async (params, credentials, signal) => {
   }
 };
 
+const updateAttendanceList = async (params, credentials, signal) => {
+  try {
+    let response = await fetch(
+      "/api/user/" +
+        params.userId +
+        "/courses/" +
+        params.courseId +
+        "/stat" +
+        "?lessonNum=" +
+        params.lessonNum,
+      {
+        method: "put",
+        signal: signal,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + credentials.t,
+        },
+        body: JSON.stringify(params),
+      }
+    );
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const update = async (params, credentials, course, signal) => {
   try {
     let response = await fetch(
@@ -120,5 +147,12 @@ const remove = async (params, credentials, signal) => {
   }
 };
 
-// export { create, list, read, update, remove };
-export { list, create, getCourse, update, remove, getAttendanceList };
+export {
+  list,
+  create,
+  getCourse,
+  update,
+  remove,
+  getAttendanceList,
+  updateAttendanceList,
+};

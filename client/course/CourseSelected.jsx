@@ -128,6 +128,8 @@ export default function CourseSelected() {
   }
 
   let totalLessons = courseData ? courseData.total_lessons : 0;
+  const isProfessor = jwt.user.role === "professor";
+  console.log(`isProfessor: ${isProfessor}`);
 
   //TODO - need to check if the user is a student or professor
   return (
@@ -166,9 +168,10 @@ export default function CourseSelected() {
 
         <AttendentTable
           lessonNum={lessonNum}
+          total_lessons={totalLessons}
           courseId={courseId}
           userId={jwt.user._id}
-          isProfessor={jwt.user.role}
+          isProfessor={isProfessor}
         ></AttendentTable>
       </div>
     </div>
