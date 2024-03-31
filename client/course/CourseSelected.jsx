@@ -16,6 +16,7 @@ import {
   Edit as EditIcon,
   Equalizer as EqualizerIcon,
 } from "@material-ui/icons";
+import DeleteCourse from "./DeleteCourse.jsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -154,14 +155,7 @@ export default function CourseSelected() {
           >
             <EditIcon />
           </IconButton>
-          <IconButton
-            className={classes.button}
-            aria-label="Delete Course"
-            component={RouterLink}
-            to={`/course/${courseId}/delete`}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <DeleteCourse courseId={courseId} />
         </div>
         <Typography variant="h2" className={classes.title}>
           Course Selected: {courseData && courseData.name}
