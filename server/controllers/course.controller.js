@@ -91,6 +91,37 @@ const create = async (req, res) => {
       total_lessons: req.body.total_lessons,
       lessons: [],
     }).save();
+
+    // Create a list of students and set them as absent for all lessons
+    //FIXME - Below is not working, need to be fixed
+
+    // let students = await User.list(User.Role.STUDENT);
+    // // console.log(`students: ${students}`);
+
+    // let attendancelist = [];
+    // students.forEach((student) => {
+    //   let status = Course.Lesson.Attendance.Status.ABSENT;
+    //   attendancelist.push(
+    //     new Course.Lesson.Attendance({
+    //       student: student,
+    //       attendance_status: status,
+    //     })
+    //   );
+    // });
+    // console.log(`attendancelist: ${attendancelist}`);
+
+    // for (i = 1; i <= req.body.total_lessons; i++) {
+    //   lesson = new Course.Lesson({
+    //     lesson_num: i,
+    //     lesson_date: Date.now() + 0,
+    //     attendance: attendancelist,
+    //   });
+
+    //   console.log(`lesson: ${lesson}`);
+    //   newCourse.lessons.push(lesson);
+    // }
+
+    // newCourse.save();
     res.json(newCourse);
   } catch (err) {
     return res.status(400).json({

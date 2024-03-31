@@ -56,23 +56,13 @@ const getCourse = async (params, credentials, signal) => {
 
 const getAttendanceList = async (params, credentials, signal) => {
   try {
-    console.log(
-      "/api/user/" +
-        params.userId +
-        "/courses/" +
-        params.courseId +
-        "?lessonNum=" +
-        params.lessonNum
-    );
-
     let response = await fetch(
       "/api/user/" +
         params.userId +
         "/courses/" +
         params.courseId +
         "?lessonNum=" +
-        params.lessonNum +
-        "/stat",
+        params.lessonNum,
       {
         method: "GET",
         signal: signal,
@@ -81,7 +71,6 @@ const getAttendanceList = async (params, credentials, signal) => {
           "Content-Type": "application/json",
           Authorization: "Bearer " + credentials.t,
         },
-        body: JSON.stringify(course),
       }
     );
     return await response.json();
