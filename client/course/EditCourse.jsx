@@ -1,7 +1,7 @@
 "use strict";
 import { useState, useEffect } from "react";
 import auth from "../lib/auth-helper.js";
-import { create } from "../lib/api-course.js";
+import { getCourse } from "../lib/api-course.js";
 import {
   useNavigate,
   useParams,
@@ -53,30 +53,55 @@ const useStyles = makeStyles((theme) => ({
     // justifyContent: "space-around",
   },
 }));
-export default function NewCourse() {
+export default function EditCourse() {
   const classes = useStyles();
+  const { courseId } = useParams();
   const navigate = useNavigate();
   const credentials = auth.isAuthenticated();
-  const [redirectToSignin, setRedirectToSignin] = useState(false);
-  if (!credentials) {
-    setRedirectToSignin(true);
-  }
 
   const [values, setValues] = useState({
     name: "",
     total_lessons: 1,
+    open: false,
+    error: "",
+    NavigateToProfile: false,
   });
-  const [open, setOpen] = useState(false);
+  if (!credentials) {
+    setValues({ ...values, NavigateToProfile: true });
+  }
+
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
-  };
-  const handleClose = () => {
-    setOpen(false);
-    navigate("/courses");
   };
   const clickCancel = () => {
     navigate("/courses");
   };
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    getCourse(
+      {
+        courseId: courseId,
+        userId: credentials.user._id,
+      },
+      { t: credentials.token },
+      signal
+    ).then((data) => {
+      if (data && data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({
+          ...values,
+          name: data.name,
+          total_lessons: data.total_lessons,
+        });
+      }
+    });
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [courseId, credentials.token, credentials.user._id]);
   const clickSubmit = () => {
     const course = {
       name: values.name || undefined,
@@ -84,27 +109,19 @@ export default function NewCourse() {
     };
     const abortController = new AbortController();
     const signal = abortController.signal;
-    create(credentials.user._id, course, credentials.token, signal).then(
-      (data) => {
-        if (data.error) {
-          setValues({ ...values, error: data.error });
-        } else {
-          setOpen(true);
-        }
-      }
-    );
-  };
-  NewCourse.open = open;
-  NewCourse.handleClose = handleClose;
-  NewCourse.propTypes = {
-    open: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired,
+    // create(credentials.user._id, course, credentials.token, signal).then(
+    //   (data) => {
+    //     if (data.error) {
+    //       setValues({ ...values, error: data.error });
+    //     } else {
+    //       setOpen(true);
+    //     }
+    //   }
+    // );
   };
 
-  if (redirectToSignin) {
-    return (
-      <Navigate to="/signin" state={{ from: location.pathname }} replace />
-    );
+  if (values.NavigateToProfile) {
+    return <Navigate to="/courses" />;
   }
 
   return (
@@ -112,7 +129,7 @@ export default function NewCourse() {
       <Card className={classes.card}>
         <CardContent className={classes.cardcontent}>
           <Typography variant="h6" className={classes.title}>
-            Add New Course
+            Edit Course
           </Typography>
 
           <TextField
@@ -131,6 +148,15 @@ export default function NewCourse() {
             onChange={handleChange("total_lessons")}
             margin="normal"
           />
+          <br />
+          {values.error && (
+            <Typography component="p" color="error">
+              <Icon color="error" className={classes.error}>
+                error
+              </Icon>
+              {values.error}
+            </Typography>
+          )}
         </CardContent>
 
         <CardActions>
@@ -152,26 +178,6 @@ export default function NewCourse() {
           </Button>
         </CardActions>
       </Card>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>New Course</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            New course successfully created.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Link to="/courses">
-            <Button
-              color="primary"
-              autoFocus
-              variant="contained"
-              onClick={handleClose}
-            >
-              Return to courses
-            </Button>
-          </Link>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 }
