@@ -11,6 +11,8 @@ import Courses from "./course/Courses.jsx";
 import CourseSelected from "./course/CourseSelected.jsx";
 import Menu from "./core/Menu";
 import NewCourse from "./course/NewCourse.jsx";
+import EditCourse from "./course/EditCourse.jsx";
+import DeleteCourse from "./course/DeleteCourse.jsx";
 
 function MainRouter() {
   return (
@@ -33,6 +35,9 @@ function MainRouter() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/courses/New" element={<NewCourse />} />
         <Route path="/course/:courseId" element={<CourseSelected />} />
+        <Route path="/course/:courseId/edit" element={<EditCourse />} />
+        <Route path="/course/:courseId/delete" element={<DeleteCourse />} />
+        <Route path="/course/:courseId/stat" element={<CourseSelected />} />
       </Routes>
     </div>
   );

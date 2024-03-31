@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
+  Button,
   Card,
   CardContent,
-  Typography,
-  TextField,
   CardActions,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+  TextField,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -48,10 +51,10 @@ export default function Signup() {
     name: "",
     password: "",
     email: "",
-    lastName: '',
-    phone: '',
-    confirmPassword: '',
-
+    lastName: "",
+    phone: "",
+    user_role: "student",
+    confirmPassword: "",
   });
   const [open, setOpen] = useState(false);
   const handleChange = (name) => (event) => {
@@ -67,6 +70,7 @@ export default function Signup() {
       password: values.password || undefined,
       lastName: values.lastName || undefined,
       phone: values.phone || undefined,
+      user_role: values.user_role || "student",
       confirmPassword: values.confirmPassword || undefined,
     };
     create(user).then((data) => {
@@ -89,13 +93,13 @@ export default function Signup() {
             Sign Up
           </Typography>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
               id="name"
               label="First Name"
               className={classes.textField}
               value={values.name}
-              onChange={handleChange('name')}
+              onChange={handleChange("name")}
               margin="normal"
             />
             <TextField
@@ -103,18 +107,18 @@ export default function Signup() {
               label="Last Name"
               className={classes.textField}
               value={values.designation}
-              onChange={handleChange('lastName')}
+              onChange={handleChange("lastName")}
               margin="normal"
             />
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
               id="email"
               label="Email"
               className={classes.textField}
               value={values.email}
-              onChange={handleChange('email')}
+              onChange={handleChange("email")}
               margin="normal"
             />
             <TextField
@@ -122,18 +126,18 @@ export default function Signup() {
               label="Phone"
               className={classes.textField}
               value={values.phone}
-              onChange={handleChange('phone')}
+              onChange={handleChange("phone")}
               margin="normal"
             />
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
               id="password"
               label="Password"
               className={classes.textField}
               value={values.password}
-              onChange={handleChange('password')}
+              onChange={handleChange("password")}
               type="password"
               margin="normal"
             />
@@ -142,10 +146,30 @@ export default function Signup() {
               label="Confirm Password"
               className={classes.textField}
               value={values.confirmPassword}
-              onChange={handleChange('confirmPassword')}
+              onChange={handleChange("confirmPassword")}
               type="password"
               margin="normal"
             />
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <RadioGroup
+              aria-label="gender"
+              name="gender1"
+              value={values.user_role}
+              onChange={handleChange("user_role")}
+            >
+              <FormControlLabel
+                value="professor"
+                control={<Radio />}
+                label="Professor"
+              />
+              <FormControlLabel
+                value="student"
+                control={<Radio />}
+                label="Student"
+              />
+            </RadioGroup>
           </div>
         </CardContent>
         <CardActions>

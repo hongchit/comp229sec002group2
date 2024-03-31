@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  useParams,
+  useLocation,
+  useNavigate,
+  Navigate,
+  Link as RouterLink,
+} from "react-router-dom";
 import { getCourse } from "../lib/api-course.js";
-import { Navigate, useParams } from "react-router-dom";
 import auth from "../lib/auth-helper.js";
 import LessonSidebar from "./LessonSidebar.jsx";
 import AttendentTable from "./AttendentTable.jsx";
 import { makeStyles, IconButton, Typography } from "@material-ui/core";
 import {
   Delete as DeleteIcon,
+  Edit as EditIcon,
   Equalizer as EqualizerIcon,
 } from "@material-ui/icons";
+import DeleteCourse from "./DeleteCourse.jsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -120,13 +127,6 @@ export default function CourseSelected() {
     console.log(auth.isAuthenticated().user._id);
   }
 
-  const clickStat = () => {
-    navigate("/course/" + courseId + "/stat");
-  };
-  const clickDelete = () => {
-    navigate("/course/" + courseId + "/delete");
-  };
-
   let totalLessons = courseData ? courseData.total_lessons : 0;
 
   //TODO - need to check if the user is a student or professor
@@ -142,17 +142,20 @@ export default function CourseSelected() {
           <IconButton
             className={classes.button}
             aria-label="Statistics"
-            onClick={clickStat}
+            component={RouterLink}
+            to={`/course/${courseId}/stat`}
           >
             <EqualizerIcon />
           </IconButton>
           <IconButton
             className={classes.button}
-            aria-label="Delete"
-            onClick={clickDelete}
+            aria-label="Edit Course"
+            component={RouterLink}
+            to={`/course/${courseId}/edit`}
           >
-            <DeleteIcon />
+            <EditIcon />
           </IconButton>
+          <DeleteCourse courseId={courseId} />
         </div>
         <Typography variant="h2" className={classes.title}>
           Course Selected: {courseData && courseData.name}

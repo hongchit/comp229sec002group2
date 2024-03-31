@@ -170,6 +170,51 @@ const stat = (req, res) => {
   //TODO - get statistics
 };
 
+const update = async (req, res) => {
+  try {
+    let course = req.course;
+
+    const currentUser = req.profile;
+    // console.log(`Current user: ${currentUser}`);
+    let currentProfessor = await User.findById(currentUser.id);
+    // console.log(`Current professor: ${currentProfessor}`);
+
+    console.log(`name: ${req.body.name}`);
+    console.log(`total_lessons: ${req.body.total_lessons}`);
+    // console.log(`professor: ${currentUser}`);
+
+    const total_lessons = parseInt(req.body.total_lessons);
+    // console.log(total_lessons);
+    console.log("isNan: " + (isNaN(total_lessons) ? "T" : "F"));
+
+    console.log("test: " + (Number.isInteger(total_lessons) ? "T" : "F"));
+    console.log("<1: " + (total_lessons < 1 ? "T" : "F"));
+
+    if (!Number.isInteger(total_lessons) || total_lessons < 1) {
+      return res.status(400).json({
+        error: "Invalid total_lessons: " + req.body.total_lessons,
+      });
+    }
+    course.name = req.body.name;
+    if (
+      course.total_lessons > total_lessons &&
+      course.lessons.length > total_lessons
+    ) {
+      // No of lessons shinks. Trucate lessons and attendance records.
+      // TODO: Walk through the array and remove the one with lesson number > total_lessons
+      // course.total_lessons.length = total_lessons;
+    }
+    course.total_lessons = total_lessons;
+
+    await course.save();
+    res.json(req.course);
+  } catch (err) {
+    return res.status(400).json({
+      error: `Update course failed - ${errorHandler.getErrorMessage(err)}`,
+    });
+  }
+};
+
 const updateAttendance = async (req, res) => {
   //TODO - update attendance by lesson
   const lessonNum = req.query.lessonNum ? req.query.lessonNum : 0;
@@ -362,6 +407,7 @@ export default {
   read,
   create,
   listByUser,
+  update,
   remove,
   stat,
   courseDetails,
