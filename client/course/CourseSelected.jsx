@@ -1,19 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getCourse } from "../lib/api-course.js";
 import { Navigate, useParams } from "react-router-dom";
 import auth from "../lib/auth-helper.js";
 import LessonSidebar from "./LessonSidebar.jsx";
-import Grid from "@material-ui/core/Grid";
 import AttendentTable from "./AttendentTable.jsx";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles, IconButton, Typography } from "@material-ui/core";
+import {
+  Delete as DeleteIcon,
+  Equalizer as EqualizerIcon,
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexGrow: 1,
     margin: 10,
+  },
+  sidebar: {},
+  content: {
+    flexGrow: 1,
+    marginLeft: "0px",
+  },
+  actions: {
+    float: "right",
   },
   card: {
     textAlign: "center",
@@ -62,6 +72,7 @@ function useQuery() {
 export default function CourseSelected() {
   const { courseId } = useParams();
   const classes = useStyles();
+  const navigate = useNavigate();
   const jwt = auth.isAuthenticated();
   const [redirectToSignin, setRedirectToSignin] = useState(false);
   const [courseData, setCourseData] = useState();
@@ -109,13 +120,40 @@ export default function CourseSelected() {
     console.log(auth.isAuthenticated().user._id);
   }
 
+  const clickStat = () => {
+    navigate("/course/" + courseId + "/stat");
+  };
+  const clickDelete = () => {
+    navigate("/course/" + courseId + "/delete");
+  };
+
   let totalLessons = courseData ? courseData.total_lessons : 0;
 
   //TODO - need to check if the user is a student or professor
   return (
     <div className={classes.root}>
-      <LessonSidebar numLessons={totalLessons} courseId={courseId} />
-      <div style={{ flexGrow: 1, marginLeft: "0px" }}>
+      <LessonSidebar
+        className={classes.sidebar}
+        numLessons={totalLessons}
+        courseId={courseId}
+      />
+      <div className={classes.content}>
+        <div className={classes.actions}>
+          <IconButton
+            className={classes.button}
+            aria-label="Statistics"
+            onClick={clickStat}
+          >
+            <EqualizerIcon />
+          </IconButton>
+          <IconButton
+            className={classes.button}
+            aria-label="Delete"
+            onClick={clickDelete}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
         <Typography variant="h2" className={classes.title}>
           Course Selected: {courseData && courseData.name}
         </Typography>
