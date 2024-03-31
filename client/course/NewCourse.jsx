@@ -74,9 +74,7 @@ export default function NewCourse() {
     setOpen(false);
     navigate("/courses");
   };
-  const clickCancel = () => {
-    navigate("/courses");
-  };
+
   const clickSubmit = () => {
     const course = {
       name: values.name || undefined,
@@ -137,8 +135,8 @@ export default function NewCourse() {
           <Button
             color="primary"
             variant="contained"
-            onClick={clickCancel}
-            className={classes.submit}
+            component={RouterLink}
+            to="/courses"
           >
             Back
           </Button>

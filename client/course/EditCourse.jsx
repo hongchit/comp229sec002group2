@@ -1,7 +1,7 @@
 "use strict";
 import { useState, useEffect } from "react";
 import auth from "../lib/auth-helper.js";
-import { getCourse } from "../lib/api-course.js";
+import { getCourse, update } from "../lib/api-course.js";
 import {
   useNavigate,
   useParams,
@@ -18,6 +18,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Icon,
   Link,
   makeStyles,
   TextField,
@@ -47,10 +48,6 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     // Define your root styles here
-    // display: "flex",
-    // flexDirection: "column",
-    // flexWrap: "wrap",
-    // justifyContent: "space-around",
   },
 }));
 export default function EditCourse() {
@@ -72,9 +69,6 @@ export default function EditCourse() {
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
-  };
-  const clickCancel = () => {
-    navigate("/courses");
   };
 
   useEffect(() => {
@@ -109,19 +103,33 @@ export default function EditCourse() {
     };
     const abortController = new AbortController();
     const signal = abortController.signal;
-    // create(credentials.user._id, course, credentials.token, signal).then(
-    //   (data) => {
-    //     if (data.error) {
-    //       setValues({ ...values, error: data.error });
-    //     } else {
-    //       setOpen(true);
-    //     }
-    //   }
-    // );
+    update(
+      {
+        userId: credentials.user._id,
+        courseId: courseId,
+      },
+      {
+        t: credentials.token,
+      },
+      course,
+      signal
+    ).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({
+          ...values,
+          name: data.name,
+          total_lessons: data.total_lessons,
+          NavigateToProfile: true,
+        });
+        // setOpen(true);
+      }
+    });
   };
 
   if (values.NavigateToProfile) {
-    return <Navigate to="/courses" />;
+    return <Navigate to={`/course/${courseId}`} />;
   }
 
   return (
@@ -144,7 +152,7 @@ export default function EditCourse() {
             id="total_lessons"
             label="Total No. of Lessons"
             className={classes.textField}
-            value={values.designation}
+            value={values.total_lessons}
             onChange={handleChange("total_lessons")}
             margin="normal"
           />
@@ -163,8 +171,8 @@ export default function EditCourse() {
           <Button
             color="primary"
             variant="contained"
-            onClick={clickCancel}
-            className={classes.submit}
+            component={RouterLink}
+            to={`/course/${courseId}`}
           >
             Back
           </Button>
@@ -174,7 +182,7 @@ export default function EditCourse() {
             onClick={clickSubmit}
             className={classes.submit}
           >
-            Add
+            Save
           </Button>
         </CardActions>
       </Card>

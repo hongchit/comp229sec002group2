@@ -54,5 +54,45 @@ const getCourse = async (params, credentials, signal) => {
   }
 };
 
-export { list, create, getCourse };
-// export { create, list, read, update, remove };
+const update = async (params, credentials, course, signal) => {
+  try {
+    let response = await fetch(
+      "/api/user/" + params.userId + "/courses/" + params.courseId,
+      {
+        method: "PUT",
+        signal: signal,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + credentials.t,
+        },
+        body: JSON.stringify(course),
+      }
+    );
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const remove = async (params, credentials, signal) => {
+  try {
+    let response = await fetch(
+      "/api/user/" + params.userId + "/courses/" + params.courseId,
+      {
+        method: "DELETE",
+        signal: signal,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + credentials.t,
+        },
+      }
+    );
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { list, create, getCourse, update, remove };
