@@ -54,7 +54,7 @@ const UserSchema = new Schema({
     type: String,
     required: 'Confirm password is required'
   },
-  
+
   user_role: {
     type: String,
     default: "student",
