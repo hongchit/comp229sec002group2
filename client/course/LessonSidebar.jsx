@@ -8,7 +8,7 @@ import {
   Toolbar,
   Box,
 } from "@material-ui/core/";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 function LessonSidebar({ numLessons, courseId }) {
   // Create an array of lessons based on numLessons
@@ -24,8 +24,8 @@ function LessonSidebar({ numLessons, courseId }) {
           <ListItem
             button
             key={text}
-            component={Link}
-            to={`/course/${courseId}?numLesson=${index + 1}`}
+            component={RouterLink}
+            to={`/course/${courseId}?lessonNum=${index + 1}`}
           >
             <ListItemText primary={text} />
           </ListItem>

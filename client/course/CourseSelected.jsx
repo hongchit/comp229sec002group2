@@ -1,19 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+import { useState, useEffect } from "react";
+import {
+  useParams,
+  useLocation,
+  useNavigate,
+  Navigate,
+  Link as RouterLink,
+} from "react-router-dom";
 import { getCourse } from "../lib/api-course.js";
-import { Navigate, useParams } from "react-router-dom";
 import auth from "../lib/auth-helper.js";
 import LessonSidebar from "./LessonSidebar.jsx";
-import Grid from "@material-ui/core/Grid";
 import AttendentTable from "./AttendentTable.jsx";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles, IconButton, Typography } from "@material-ui/core";
+import {
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  Equalizer as EqualizerIcon,
+} from "@material-ui/icons";
+import DeleteCourse from "./DeleteCourse.jsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexGrow: 1,
     margin: 10,
+  },
+  sidebar: {},
+  content: {
+    flexGrow: 1,
+    marginLeft: "0px",
+  },
+  actions: {
+    float: "right",
   },
   card: {
     textAlign: "center",
@@ -62,21 +79,22 @@ function useQuery() {
 export default function CourseSelected() {
   const { courseId } = useParams();
   const classes = useStyles();
+  const navigate = useNavigate();
   const jwt = auth.isAuthenticated();
   const [redirectToSignin, setRedirectToSignin] = useState(false);
   const [courseData, setCourseData] = useState();
 
   const query = useQuery();
-  const [numLesson, setNumLesson] = useState(query.get("numLesson") || 0);
+  const [lessonNum, setLessonNum] = useState(query.get("lessonNum") || 0);
 
-  const numLessonsPara = parseInt(query.get("numLesson"), 10);
+  const lessonNumPara = parseInt(query.get("lessonNum"), 10);
 
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
-    if (numLessonsPara) {
-      setNumLesson(numLessonsPara);
+    if (lessonNumPara) {
+      setLessonNum(lessonNumPara);
     }
 
     getCourse(
@@ -98,7 +116,7 @@ export default function CourseSelected() {
     return function cleanup() {
       abortController.abort();
     };
-  }, [courseId, jwt.token, jwt.user._id, numLessonsPara]);
+  }, [courseId, jwt.token, jwt.user._id, lessonNumPara]);
 
   if (redirectToSignin) {
     return (
@@ -110,12 +128,37 @@ export default function CourseSelected() {
   }
 
   let totalLessons = courseData ? courseData.total_lessons : 0;
+  const isProfessor = jwt.user.role === "professor";
+  console.log(`isProfessor: ${isProfessor}`);
 
   //TODO - need to check if the user is a student or professor
   return (
     <div className={classes.root}>
-      <LessonSidebar numLessons={totalLessons} courseId={courseId} />
-      <div style={{ flexGrow: 1, marginLeft: "0px" }}>
+      <LessonSidebar
+        className={classes.sidebar}
+        numLessons={totalLessons}
+        courseId={courseId}
+      />
+      <div className={classes.content}>
+        <div className={classes.actions}>
+          <IconButton
+            className={classes.button}
+            aria-label="Statistics"
+            component={RouterLink}
+            to={`/course/${courseId}/stat`}
+          >
+            <EqualizerIcon />
+          </IconButton>
+          <IconButton
+            className={classes.button}
+            aria-label="Edit Course"
+            component={RouterLink}
+            to={`/course/${courseId}/edit`}
+          >
+            <EditIcon />
+          </IconButton>
+          <DeleteCourse courseId={courseId} />
+        </div>
         <Typography variant="h2" className={classes.title}>
           Course Selected: {courseData && courseData.name}
         </Typography>
@@ -124,10 +167,11 @@ export default function CourseSelected() {
         </Typography>
 
         <AttendentTable
-          numLesson={numLesson}
+          lessonNum={lessonNum}
+          total_lessons={totalLessons}
           courseId={courseId}
           userId={jwt.user._id}
-          isProfessor={jwt.user.role}
+          isProfessor={isProfessor}
         ></AttendentTable>
       </div>
     </div>

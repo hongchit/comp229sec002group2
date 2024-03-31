@@ -91,7 +91,46 @@ const create = async (req, res) => {
       total_lessons: req.body.total_lessons,
       lessons: [],
     }).save();
+
+    // Create a list of students and set them as absent for all lessons
+
+    let students = await User.list(User.Role.STUDENT);
+    // console.log(`students: ${students}`);
+
+    let attendancelist = [];
+    students.forEach((student) => {
+      let status = Course.Lesson.Attendance.Status.ABSENT;
+      attendancelist.push(
+        new Course.Lesson.Attendance({
+          student: student,
+          attendance_status: status,
+        })
+      );
+    });
+    // console.log(`attendancelist: ${attendancelist}`);
+
+    for (let i = 1; i <= req.body.total_lessons; i++) {
+      let lesson = new Course.Lesson({
+        lesson_num: i,
+        lesson_date: Date.now() + 0,
+        attendance: attendancelist,
+      });
+
+      // console.log(`lesson: ${lesson}`);
+      newCourse.lessons.push(lesson);
+    }
+
+    newCourse.save();
     res.json(newCourse);
+    // newCourse.save().then(async (savedCourse) => {
+    //   for (let lesson of savedCourse.lessons) {
+    //     for (let attendance of lesson.attendance) {
+    //       await attendance.populate("student").execPopulate();
+    //     }
+    //   }
+
+    //   res.json(savedCourse);
+    // });
   } catch (err) {
     return res.status(400).json({
       error: `Could not create course: ${err.message}`,
@@ -170,8 +209,56 @@ const stat = (req, res) => {
   //TODO - get statistics
 };
 
+const update = async (req, res) => {
+  try {
+    let course = req.course;
+
+    const currentUser = req.profile;
+    // console.log(`Current user: ${currentUser}`);
+    let currentProfessor = await User.findById(currentUser.id);
+    // console.log(`Current professor: ${currentProfessor}`);
+
+    console.log(`name: ${req.body.name}`);
+    console.log(`total_lessons: ${req.body.total_lessons}`);
+    // console.log(`professor: ${currentUser}`);
+
+    const total_lessons = parseInt(req.body.total_lessons);
+    // console.log(total_lessons);
+    console.log("isNan: " + (isNaN(total_lessons) ? "T" : "F"));
+
+    console.log("test: " + (Number.isInteger(total_lessons) ? "T" : "F"));
+    console.log("<1: " + (total_lessons < 1 ? "T" : "F"));
+
+    if (!Number.isInteger(total_lessons) || total_lessons < 1) {
+      return res.status(400).json({
+        error: "Invalid total_lessons: " + req.body.total_lessons,
+      });
+    }
+    course.name = req.body.name;
+    if (
+      course.total_lessons > total_lessons &&
+      course.lessons.length > total_lessons
+    ) {
+      // No of lessons shinks. Trucate lessons and attendance records.
+      // TODO: Walk through the array and remove the one with lesson number > total_lessons
+      // course.total_lessons.length = total_lessons;
+    }
+    course.total_lessons = total_lessons;
+
+    await course.save();
+    res.json(req.course);
+  } catch (err) {
+    return res.status(400).json({
+      error: `Update course failed - ${errorHandler.getErrorMessage(err)}`,
+    });
+  }
+};
+
 const updateAttendance = async (req, res) => {
   //TODO - update attendance by lesson
+
+  let course = await Course.findById(req.course.id);
+  // console.log(`course: ${course}`);
   const lessonNum = req.query.lessonNum ? req.query.lessonNum : 0;
   if (lessonNum === 0) {
     return res.status(400).json({
@@ -179,7 +266,8 @@ const updateAttendance = async (req, res) => {
     });
   }
 
-  const maxLesson = req.course.total_lessons;
+  const maxLesson = course.total_lessons;
+  // console.log(`maxLesson: ${maxLesson}, lessonNum: ${lessonNum}`);
 
   if (lessonNum > maxLesson) {
     return res.status(400).json({
@@ -193,44 +281,6 @@ const updateAttendance = async (req, res) => {
       error: "Attendance data is required",
     });
   }
-
-  //console.log(`req.course: ${req.course}`);
-  // console.log(`req.course: ${req.course.lessons}`);
-
-  // //for each attendance data, update the attendance
-  // let lesson = req.course.lessons.find(
-  //   (lesson) => lesson.lesson_num === lessonNum
-  // );
-
-  // console.log(`lesson: ${lesson}`);
-
-  // if (!lesson) {
-  //   //create a new lesson
-  //   lesson = new Course.Lesson({
-  //     lesson_num: lessonNum,
-  //     lesson_date: Date.now(),
-  //     attendance: [],
-  //   });
-  // }
-  //let lessonAttendance = lesson.attendance;
-  //let attendance = new Map();
-
-  // attendData.forEach(async (attendance) => {
-  //   //find student from the database using attendance data
-  //   let student = await User.findById(attendance.student);
-  //   if (!student) {
-  //     return res.status(400).json({
-  //       error: `Student not found for attendance: ${attendance.student}`,
-  //     });
-  //   }
-
-  //   let status = attendance.status
-  //     ? Course.Lesson.Attendance.Status.PRESENT
-  //     : Course.Lesson.Attendance.Status.ABSENT;
-
-  //   attendance.set(student, status);
-  // });
-
   let attendanceMap = new Map();
 
   for (const attendanceData of attendData) {
@@ -362,6 +412,7 @@ export default {
   read,
   create,
   listByUser,
+  update,
   remove,
   stat,
   courseDetails,

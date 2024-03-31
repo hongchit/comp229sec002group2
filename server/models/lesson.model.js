@@ -29,8 +29,9 @@ LessonSchema.methods = {
     let record = undefined;
     let index = undefined;
     if (this.attendance) {
-      for (let i = 0; i < this.attendance.size; i++) {
-        if (this.attendance[i].id == student.id) {
+      for (let i = 0; i < this.attendance.length; i++) {
+        // User Object ID cannot be compared with ==. Use .equals() or convert to string with String(user._id)
+        if (this.attendance[i].student.equals(student.id)) {
           index = i;
           break;
         }
@@ -38,7 +39,7 @@ LessonSchema.methods = {
     }
     if (index === undefined || !this.attendance[index]) {
       let newRecord = new Attendance({
-        student: student,
+        student: student.id,
         attendance_status: status,
       });
       index = this.attendance.size;

@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     marginBottom: theme.spacing(2),
   },
+  inputContainer: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
 }));
 export default function EditProfile() {
   const classes = useStyles();
@@ -43,6 +47,8 @@ export default function EditProfile() {
     name: "",
     password: "",
     email: "",
+    lastName: '',
+    phone: '',
     open: false,
     error: "",
     NavigateToProfile: false,
@@ -61,7 +67,7 @@ export default function EditProfile() {
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, name: data.name, email: data.email });
+        setValues({ ...values, name: data.name, lastName: data.lastName, email: data.email, phone: data.phone });
       }
     });
     return function cleanup() {
@@ -71,7 +77,9 @@ export default function EditProfile() {
   const clickSubmit = () => {
     const user = {
       name: values.name || undefined,
+      lastName: values.lastName || undefined,
       email: values.email || undefined,
+      phone: values.phone || undefined,
       password: values.password || undefined,
     };
     update(
@@ -102,34 +110,57 @@ export default function EditProfile() {
         <Typography variant="h6" className={classes.title}>
           Edit Profile
         </Typography>
-        <TextField
-          id="name"
-          label="Name"
-          className={classes.textField}
-          value={values.name}
-          onChange={handleChange("name")}
-          margin="normal"
-        />
-        <br />
-        <TextField
-          id="email"
-          type="email"
-          label="Email"
-          className={classes.textField}
-          value={values.email}
-          onChange={handleChange("email")}
-          margin="normal"
-        />
-        <br />
-        <TextField
-          id="password"
-          type="password"
-          label="Password"
-          className={classes.textField}
-          value={values.password}
-          onChange={handleChange("password")}
-          margin="normal"
-        />
+        <div className={classes.inputContainer}>
+          <TextField
+            id="name"
+            label="First Name"
+            className={classes.textField}
+            value={values.name}
+            onChange={handleChange("name")}
+            margin="normal"
+          />
+          <TextField
+            id="lastName"
+            label="Last Name"
+            className={classes.textField}
+            value={values.lastName}
+            onChange={handleChange('lastName')}
+            margin="normal"
+          />
+        </div>
+
+        <div className={classes.inputContainer}>
+          <TextField
+            id="email"
+            type="email"
+            label="Email"
+            className={classes.textField}
+            value={values.email}
+            onChange={handleChange("email")}
+            margin="normal"
+          />
+          <TextField
+            id="phone"
+            label="Phone"
+            className={classes.textField}
+            value={values.phone}
+            onChange={handleChange('phone')}
+            margin="normal"
+          />
+        </div>
+
+        <div className={classes.inputContainer}>
+          <TextField
+            id="password"
+            type="password"
+            label="Password"
+            className={classes.textField}
+            value={values.password}
+            onChange={handleChange("password")}
+            margin="normal"
+          />
+        </div>
+
         <br />{" "}
         {values.error && (
           <Typography component="p" color="error">
