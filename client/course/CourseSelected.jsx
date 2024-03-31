@@ -78,16 +78,16 @@ export default function CourseSelected() {
   const [courseData, setCourseData] = useState();
 
   const query = useQuery();
-  const [numLesson, setNumLesson] = useState(query.get("numLesson") || 0);
+  const [lessonNum, setLessonNum] = useState(query.get("lessonNum") || 0);
 
-  const numLessonsPara = parseInt(query.get("numLesson"), 10);
+  const lessonNumPara = parseInt(query.get("lessonNum"), 10);
 
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
-    if (numLessonsPara) {
-      setNumLesson(numLessonsPara);
+    if (lessonNumPara) {
+      setLessonNum(lessonNumPara);
     }
 
     getCourse(
@@ -109,7 +109,7 @@ export default function CourseSelected() {
     return function cleanup() {
       abortController.abort();
     };
-  }, [courseId, jwt.token, jwt.user._id, numLessonsPara]);
+  }, [courseId, jwt.token, jwt.user._id, lessonNumPara]);
 
   if (redirectToSignin) {
     return (
@@ -162,7 +162,7 @@ export default function CourseSelected() {
         </Typography>
 
         <AttendentTable
-          numLesson={numLesson}
+          lessonNum={lessonNum}
           courseId={courseId}
           userId={jwt.user._id}
           isProfessor={jwt.user.role}

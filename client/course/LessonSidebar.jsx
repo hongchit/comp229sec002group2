@@ -25,7 +25,7 @@ function LessonSidebar({ numLessons, courseId }) {
             button
             key={text}
             component={Link}
-            to={`/course/${courseId}?numLesson=${index + 1}`}
+            to={`/course/${courseId}?lessonNum=${index + 1}`}
           >
             <ListItemText primary={text} />
           </ListItem>

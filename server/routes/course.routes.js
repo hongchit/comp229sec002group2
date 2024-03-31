@@ -26,6 +26,7 @@ router
     courseCtrl.listByUser
   );
 
+//?lessonNum  is a query parameter
 router
   .route("/api/user/:userId/courses/:courseId")
   .get(

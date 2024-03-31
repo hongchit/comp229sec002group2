@@ -54,5 +54,39 @@ const getCourse = async (params, credentials, signal) => {
   }
 };
 
-export { list, create, getCourse };
+const getAttendanceList = async (params, credentials, signal) => {
+  try {
+    console.log(
+      "/api/user/" +
+        params.userId +
+        "/courses/" +
+        params.courseId +
+        "?lessonNum=" +
+        params.lessonNum
+    );
+
+    let response = await fetch(
+      "/api/user/" +
+        params.userId +
+        "/courses/" +
+        params.courseId +
+        "?lessonNum=" +
+        params.lessonNum,
+      {
+        method: "GET",
+        signal: signal,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + credentials.t,
+        },
+      }
+    );
+    return response.json();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { list, create, getCourse, getAttendanceList };
 // export { create, list, read, update, remove };
