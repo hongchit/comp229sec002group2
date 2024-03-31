@@ -13,7 +13,9 @@ import {
   DialogActions,
 } from "@material-ui/core/";
 import { getAttendanceList, updateAttendanceList } from "../lib/api-course";
+import { list as listUsers } from "../user/api-user";
 import auth from "../lib/auth-helper";
+import { forEach } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   formGroup: {
@@ -63,11 +65,35 @@ function AttendentTable({
 
   //const [lesson, setLesson] = useState(null);
 
+  const [students, setStudents] = useState([]);
   const [lesson, setLesson] = useState({ attendance: [] });
   //const [updatedAttendance, setUpdatedAttendance] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
+
+  const getStudentName = (studentId) => {
+    console.log("getStudent: " + studentId);
+    console.log(students);
+    let studentName = false;
+    if (students) {
+      students.forEach((value) => {
+        if (value._id == studentId) {
+          if (value.name) {
+            studentName = value.name;
+          }
+          if (value.lastName) {
+            studentName = studentName + " " + value.lastName;
+          }
+        }
+      });
+    }
+    if (studentName) {
+      return studentName;
+    } else {
+      return studentId;
+    }
+  };
 
   useEffect(() => {
     //when lessonNum is 0, set the lesson to an empty object
@@ -76,6 +102,19 @@ function AttendentTable({
       return;
     }
     setLoading(true);
+
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    listUsers(signal).then((data) => {
+      if (data && data.error) {
+        console.log(`error: ${data.error}`);
+      } else {
+        setStudents(data);
+        console.log(`students data:`);
+        console.log({ data });
+      }
+    });
+
     getAttendanceList(
       {
         userId: userId,
@@ -190,7 +229,7 @@ function AttendentTable({
                 color="primary"
               />
             }
-            label={`Student ID: ${record.student}`}
+            label={`${getStudentName(record.student)}`}
           />
         ))}
       </FormGroup>

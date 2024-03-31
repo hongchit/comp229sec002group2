@@ -12,7 +12,9 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo500 from "./../assets/images/InsideOut-Logo500.jpg";
 
 const isActive = (location, path) => {
-  return location.pathname === path ? { color: "#ff4081" } : { color: "#ffffff" };
+  return location.pathname === path
+    ? { color: "#ff4081" }
+    : { color: "#ffffff" };
 };
 export default function Menu() {
   const classes = useStyles();

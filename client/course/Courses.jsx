@@ -65,6 +65,8 @@ export default function Courses() {
     setRedirectToSignin(true);
   }
 
+  console.log("Professor? ");
+  console.log(credentials.user);
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     const abortController = new AbortController();
@@ -117,7 +119,7 @@ export default function Courses() {
             </ImageListItem>
           );
         })}
-        {credentials && credentials.user.user_role == "professor" && (
+        {credentials && credentials.user.role == "professor" && (
           <ImageListItem key={0}>
             <Link component={RouterLink} to={"/courses/new"} key={0}>
               <Card className={classes.card} elevation={4}>

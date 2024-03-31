@@ -140,7 +140,7 @@ User.list = async function (role) {
   }
 
   let users = await User.find(filter).select(
-    "name email user_role updated created"
+    "name lastName email user_role updated created"
   );
   return users;
 };

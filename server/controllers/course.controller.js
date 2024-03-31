@@ -164,7 +164,13 @@ const listByUser = async (req, res) => {
 
     const currentUser = req.profile;
     console.log(`Current user: ${currentUser}`);
-    let courses = await Course.list(currentUser); //.populate("professor").exec();
+    let courses = undefined;
+    if (currentUser.user_role == "student") {
+      // TODO: Workaround for student role to list all courses.
+      courses = await Course.list(); //.populate("professor").exec();
+    } else {
+      courses = await Course.list(currentUser); //.populate("professor").exec();
+    }
     // .populate("student");
     res.json(courses);
   } catch (err) {
@@ -192,6 +198,7 @@ const courseDetails = (req, res) => {
   const lessonNum = req.query.lessonNum ? req.query.lessonNum : 0;
   if (lessonNum > 0) {
     // Get attendance for the lesson
+    // let course = req.course.populate("lessons.attendance.student");  // Cannot find after populate
     let lesson = req.course.lessons.find(
       (lesson) => lesson.lesson_num == lessonNum
     );
