@@ -17,15 +17,16 @@ router.route("/api/users").post(userCtrl.create);
 //   next();
 // };
 
+router.param("userId", userCtrl.userByID);
+
 router.route("/api/users").get(userCtrl.list);
 router
-    .route("/api/users/:userId")
-    //.get(authCtrl.requireSignin, userCtrl.read);
-    .get(authCtrl.requireSignin, userCtrl.userByID)
-    .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
-    .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove);
-router.param("userId", userCtrl.userByID);
-router.route("/api/users/:userId").get(userCtrl.read);
+  .route("/api/users/:userId")
+  //.get(authCtrl.requireSignin, userCtrl.read);
+  //   .get(authCtrl.requireSignin, userCtrl.userByID)
+  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
+  .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove);
+router.route("/api/users/:userId").get(userCtrl.read); // TODO: Require Sign In
 // router.route("/api/users/:userId").put(userCtrl.update);
 // router.route("/api/users/:userId").delete(userCtrl.remove);
 

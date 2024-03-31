@@ -20,7 +20,9 @@ const signin = async (req, res) => {
       user: {
         _id: user._id,
         name: user.name,
+        lastName: user.lastName,
         email: user.email,
+        role: user.user_role,
       },
     });
   } catch (err) {

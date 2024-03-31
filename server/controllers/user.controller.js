@@ -50,7 +50,7 @@ const userByID = async (req, res, next, id) => {
     req.profile = user;
     next();
   } catch (err) {
-    return res.status("400").json({
+    return res.status(400).json({
       error: "Could not retrieve user",
     });
   }
@@ -105,32 +105,44 @@ const initData = async (req, res) => {
   let users = [
     {
       name: "Esther",
+      lastName: "Barrera",
       email: "esther@professor.com",
+      phone: "123-456-7890",
       user_role: User.Role.PROFESSOR,
     },
     {
       name: "Madison",
+      lastName: "Stanley",
       email: "madison@professor.com",
+      phone: "987-654-3210",
       user_role: User.Role.PROFESSOR,
     },
     {
       name: "Tahlia",
+      lastName: "Carey",
       email: "tahlia@professor.com",
+      phone: "132-465-8790",
       user_role: User.Role.PROFESSOR,
     },
     {
       name: "Gloria",
+      lastName: "Boyer",
       email: "gloria@student.com",
+      phone: "",
       user_role: User.Role.STUDENT,
     },
     {
       name: "Wilson",
+      lastName: "Banks",
       email: "wilson@student.com",
+      phone: "222-333-4455",
       user_role: User.Role.STUDENT,
     },
     {
       name: "Cynthia",
+      lastName: "Santos",
       email: "cynthia@student.com",
+      phone: "647-493-5628",
       user_role: User.Role.STUDENT,
     },
   ];
@@ -145,7 +157,9 @@ const initData = async (req, res) => {
       } else {
         await new User({
           name: user.name,
+          lastName: user.lastName,
           email: user.email,
+          phone: user.phone,
           password: user.name.toLowerCase(),
           user_role: user.user_role,
         }).save();

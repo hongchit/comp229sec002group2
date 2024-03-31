@@ -26,6 +26,7 @@ router
     courseCtrl.listByUser
   );
 
+//?lessonNum  is a query parameter
 router
   .route("/api/user/:userId/courses/:courseId")
   .get(
@@ -43,7 +44,7 @@ router
     authCtrl.requireSignin,
     authCtrl.hasAuthorization,
     authCtrl.requireProfessorRole,
-    courseCtrl.updateAttendance
+    courseCtrl.update
   );
 
 router
@@ -53,6 +54,12 @@ router
     authCtrl.hasAuthorization,
     authCtrl.requireProfessorRole,
     courseCtrl.stat
+  )
+  .put(
+    authCtrl.requireSignin,
+    authCtrl.hasAuthorization,
+    authCtrl.requireProfessorRole,
+    courseCtrl.updateAttendance
   );
 
 export default router;
