@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import auth from "../lib/auth-helper.js";
 import { list } from "../lib/api-course.js";
-import { Link as RouterLink, Navigate, useParams } from "react-router-dom";
+import { Link as RouterLink, Navigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function Courses() {
+  const classes = useStyles();
   const credentials = auth.isAuthenticated();
   const [redirectToSignin, setRedirectToSignin] = useState(false);
   if (!credentials) {
@@ -87,7 +88,6 @@ export default function Courses() {
     );
   }
 
-  const classes = useStyles();
   return (
     <Paper className={classes.root} elevation={0}>
       <Typography variant="h6" className={classes.title}>

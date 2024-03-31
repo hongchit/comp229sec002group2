@@ -111,9 +111,9 @@ Course.list = async function (professor) {
     filter = { professor: { $eq: professor } };
   }
 
-  let courses = await Course.find(filter).select(
-    "name professor total_lessons lessons created updated"
-  );
+  let courses = await Course.find(filter)
+    .select("name professor total_lessons lessons created updated")
+    .sort({ name: 1, created: 1 });
   return courses;
 };
 
