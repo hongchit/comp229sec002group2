@@ -117,17 +117,22 @@ export default function Courses() {
             </ImageListItem>
           );
         })}
-        <ImageListItem key={0}>
-          <Link component={RouterLink} to={"/courses/new"} key={0}>
-            <Card className={classes.card} elevation={4}>
-              <CardContent className={classes.cardcontent}>
-                <IconButton className={classes.button} aria-label="New Course">
-                  <AddIcon />
-                </IconButton>
-              </CardContent>
-            </Card>
-          </Link>
-        </ImageListItem>
+        {credentials && credentials.user.user_role == "professor" && (
+          <ImageListItem key={0}>
+            <Link component={RouterLink} to={"/courses/new"} key={0}>
+              <Card className={classes.card} elevation={4}>
+                <CardContent className={classes.cardcontent}>
+                  <IconButton
+                    className={classes.button}
+                    aria-label="New Course"
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </CardContent>
+              </Card>
+            </Link>
+          </ImageListItem>
+        )}
       </ImageList>
     </Paper>
   );
