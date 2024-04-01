@@ -34,7 +34,7 @@ export default function Home() {
       />
       <CardContent>
         <Typography variant="body2" component="p">
-        Welcome to the Student Attendance Management System (SAMS)
+          Welcome to the Student Attendance Management System (SAMS)
         </Typography>
       </CardContent>
     </Card>

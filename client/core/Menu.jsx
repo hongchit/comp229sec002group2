@@ -10,6 +10,7 @@ import {
 import { Home as HomeIcon } from "@material-ui/icons";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo500 from "./../assets/images/InsideOut-Logo500.jpg";
+import Logo500 from "./../assets/images/InsideOut-Logo500.jpg";
 
 const isActive = (location, path) => {
   return location.pathname === path
