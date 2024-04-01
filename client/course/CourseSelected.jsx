@@ -140,25 +140,27 @@ export default function CourseSelected() {
         courseId={courseId}
       />
       <div className={classes.content}>
-        <div className={classes.actions}>
-          <IconButton
-            className={classes.button}
-            aria-label="Statistics"
-            component={RouterLink}
-            to={`/course/${courseId}/stat`}
-          >
-            <EqualizerIcon />
-          </IconButton>
-          <IconButton
-            className={classes.button}
-            aria-label="Edit Course"
-            component={RouterLink}
-            to={`/course/${courseId}/edit`}
-          >
-            <EditIcon />
-          </IconButton>
-          <DeleteCourse courseId={courseId} />
-        </div>
+        {isProfessor && (
+          <div className={classes.actions}>
+            {/* <IconButton
+          className={classes.button}
+          aria-label="Statistics"
+          component={RouterLink}
+          to={`/course/${courseId}/stat`}
+        >
+          <EqualizerIcon />
+        </IconButton> */}
+            <IconButton
+              className={classes.button}
+              aria-label="Edit Course"
+              component={RouterLink}
+              to={`/course/${courseId}/edit`}
+            >
+              <EditIcon />
+            </IconButton>
+            <DeleteCourse courseId={courseId} />
+          </div>
+        )}
         <Typography variant="h2" className={classes.title}>
           Course Selected: {courseData && courseData.name}
         </Typography>
