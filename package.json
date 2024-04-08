@@ -17,7 +17,9 @@
     "dev": "concurrently 'vite' \"nodemon server.js\"",
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "heroku-postbuild": "cd client && yarn && yarn build",
+    "start": "node server.js"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
