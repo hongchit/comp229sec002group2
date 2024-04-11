@@ -16,6 +16,7 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
+import Icon from "@material-ui/core/Icon";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { create } from "./api-user";
@@ -92,7 +93,6 @@ export default function Signup() {
           <Typography variant="h6" className={classes.title}>
             Sign Up
           </Typography>
-
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
               id="name"
@@ -111,7 +111,6 @@ export default function Signup() {
               margin="normal"
             />
           </div>
-
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
               id="email"
@@ -130,7 +129,6 @@ export default function Signup() {
               margin="normal"
             />
           </div>
-
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <TextField
               id="password"
@@ -151,7 +149,6 @@ export default function Signup() {
               margin="normal"
             />
           </div>
-
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <RadioGroup
               aria-label="gender"
@@ -170,6 +167,17 @@ export default function Signup() {
                 label="Student"
               />
             </RadioGroup>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <br />{" "}
+            {values.error && (
+              <Typography component="p" color="error">
+                <Icon color="error" className={classes.error}>
+                  error
+                </Icon>
+                {values.error}
+              </Typography>
+            )}
           </div>
         </CardContent>
         <CardActions>

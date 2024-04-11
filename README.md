@@ -28,7 +28,9 @@ stephanie santos 03242024
 2. Check your MongoDB and verify the valuees.
 3. Check the file user.controller.js in the function initData() for user details being created.
 
-Note: Add the parameter `clear=true` to clear existing records before adding default records. e.g. `http://localhost:3000/api/users/initData?clear=true`
+Note: Add the parameter `clear=true` to clear existing records before adding default records.
+i.e. `http://localhost:3000/api/initData/users?clear=true`
+`http://localhost:3000/api/initData/courses?clear=true`
 
 #NOTE - Tested by victor, need to run clear first before init user data
 

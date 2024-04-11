@@ -3,6 +3,7 @@ function handleError(req, res) {
 }
 function getErrorMessage(errMsg) {
   console.log(errMsg);
+  return errMsg.message != undefined ? errMsg.message : errMsg;
 }
 // Export the controller function
 export default {
